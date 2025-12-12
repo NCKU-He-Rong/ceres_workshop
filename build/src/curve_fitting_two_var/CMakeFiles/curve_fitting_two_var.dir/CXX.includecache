@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/lio/Desktop/ceres_workshop/src/curve_fitting_two_var/main.cpp
+iostream
+-
+vector
+-
+ceres/ceres.h
+-
+

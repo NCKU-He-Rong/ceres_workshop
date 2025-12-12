@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/lio/Desktop/ceres_workshop/src/simple_case_one_dim/main.cpp
+iostream
+-
+vector
+-
+ceres/ceres.h
+-
+

@@ -1,0 +1,2 @@
+add_executable(curve_fitting_two_var main.cpp)
+target_link_libraries(curve_fitting_two_var ${CERES_LIBRARIES})

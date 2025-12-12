@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/manual_jac_muti_dim/include/mean_cost.hpp
+ceres/ceres.h
+-
+
+/home/lio/Desktop/ceres_workshop/src/manual_jac_muti_dim/main.cpp
+iostream
+-
+vector
+-
+ceres/ceres.h
+-
+mean_cost.hpp
+-
+

@@ -1,0 +1,5 @@
+add_subdirectory(simple_case_one_dim)
+add_subdirectory(simple_case_muti_dim)
+add_subdirectory(curve_fitting_two_var)
+add_subdirectory(manual_jac_one_dim)
+add_subdirectory(manual_jac_muti_dim)
