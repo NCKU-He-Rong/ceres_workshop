@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -Wall -O3  -shared -Wl,-soname,libfileio.so -o ../../../lib/libfileio.so CMakeFiles/fileio.dir/txtio.o 

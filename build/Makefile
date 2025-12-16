@@ -111,69 +111,95 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named simple_case_one_dim
+# Target rules for targets named fileio
 
 # Build rule for target.
-simple_case_one_dim: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 simple_case_one_dim
-.PHONY : simple_case_one_dim
+fileio: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 fileio
+.PHONY : fileio
 
 # fast build rule for target.
-simple_case_one_dim/fast:
-	$(MAKE) -f src/simple_case_one_dim/CMakeFiles/simple_case_one_dim.dir/build.make src/simple_case_one_dim/CMakeFiles/simple_case_one_dim.dir/build
-.PHONY : simple_case_one_dim/fast
+fileio/fast:
+	$(MAKE) -f src/fileio/CMakeFiles/fileio.dir/build.make src/fileio/CMakeFiles/fileio.dir/build
+.PHONY : fileio/fast
 
 #=============================================================================
-# Target rules for targets named simple_case_muti_dim
+# Target rules for targets named curve_fitting_autodiff
 
 # Build rule for target.
-simple_case_muti_dim: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 simple_case_muti_dim
-.PHONY : simple_case_muti_dim
+curve_fitting_autodiff: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 curve_fitting_autodiff
+.PHONY : curve_fitting_autodiff
 
 # fast build rule for target.
-simple_case_muti_dim/fast:
-	$(MAKE) -f src/simple_case_muti_dim/CMakeFiles/simple_case_muti_dim.dir/build.make src/simple_case_muti_dim/CMakeFiles/simple_case_muti_dim.dir/build
-.PHONY : simple_case_muti_dim/fast
+curve_fitting_autodiff/fast:
+	$(MAKE) -f src/curve_fitting_autodiff/CMakeFiles/curve_fitting_autodiff.dir/build.make src/curve_fitting_autodiff/CMakeFiles/curve_fitting_autodiff.dir/build
+.PHONY : curve_fitting_autodiff/fast
 
 #=============================================================================
-# Target rules for targets named curve_fitting_two_var
+# Target rules for targets named curve_fitting_numdiff
 
 # Build rule for target.
-curve_fitting_two_var: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 curve_fitting_two_var
-.PHONY : curve_fitting_two_var
+curve_fitting_numdiff: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 curve_fitting_numdiff
+.PHONY : curve_fitting_numdiff
 
 # fast build rule for target.
-curve_fitting_two_var/fast:
-	$(MAKE) -f src/curve_fitting_two_var/CMakeFiles/curve_fitting_two_var.dir/build.make src/curve_fitting_two_var/CMakeFiles/curve_fitting_two_var.dir/build
-.PHONY : curve_fitting_two_var/fast
+curve_fitting_numdiff/fast:
+	$(MAKE) -f src/curve_fitting_numdiff/CMakeFiles/curve_fitting_numdiff.dir/build.make src/curve_fitting_numdiff/CMakeFiles/curve_fitting_numdiff.dir/build
+.PHONY : curve_fitting_numdiff/fast
 
 #=============================================================================
-# Target rules for targets named manual_jac_one_dim
+# Target rules for targets named curve_fitting_jacobian
 
 # Build rule for target.
-manual_jac_one_dim: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 manual_jac_one_dim
-.PHONY : manual_jac_one_dim
+curve_fitting_jacobian: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 curve_fitting_jacobian
+.PHONY : curve_fitting_jacobian
 
 # fast build rule for target.
-manual_jac_one_dim/fast:
-	$(MAKE) -f src/manual_jac_one_dim/CMakeFiles/manual_jac_one_dim.dir/build.make src/manual_jac_one_dim/CMakeFiles/manual_jac_one_dim.dir/build
-.PHONY : manual_jac_one_dim/fast
+curve_fitting_jacobian/fast:
+	$(MAKE) -f src/curve_fitting_jacobian/CMakeFiles/curve_fitting_jacobian.dir/build.make src/curve_fitting_jacobian/CMakeFiles/curve_fitting_jacobian.dir/build
+.PHONY : curve_fitting_jacobian/fast
 
 #=============================================================================
-# Target rules for targets named manual_jac_muti_dim
+# Target rules for targets named curve_fitting_autodiff_two_var
 
 # Build rule for target.
-manual_jac_muti_dim: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 manual_jac_muti_dim
-.PHONY : manual_jac_muti_dim
+curve_fitting_autodiff_two_var: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 curve_fitting_autodiff_two_var
+.PHONY : curve_fitting_autodiff_two_var
 
 # fast build rule for target.
-manual_jac_muti_dim/fast:
-	$(MAKE) -f src/manual_jac_muti_dim/CMakeFiles/manual_jac_muti_dim.dir/build.make src/manual_jac_muti_dim/CMakeFiles/manual_jac_muti_dim.dir/build
-.PHONY : manual_jac_muti_dim/fast
+curve_fitting_autodiff_two_var/fast:
+	$(MAKE) -f src/curve_fitting_autodiff_two_var/CMakeFiles/curve_fitting_autodiff_two_var.dir/build.make src/curve_fitting_autodiff_two_var/CMakeFiles/curve_fitting_autodiff_two_var.dir/build
+.PHONY : curve_fitting_autodiff_two_var/fast
+
+#=============================================================================
+# Target rules for targets named curve_fitting_jacobian_two_var
+
+# Build rule for target.
+curve_fitting_jacobian_two_var: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 curve_fitting_jacobian_two_var
+.PHONY : curve_fitting_jacobian_two_var
+
+# fast build rule for target.
+curve_fitting_jacobian_two_var/fast:
+	$(MAKE) -f src/curve_fitting_jacobian_two_var/CMakeFiles/curve_fitting_jacobian_two_var.dir/build.make src/curve_fitting_jacobian_two_var/CMakeFiles/curve_fitting_jacobian_two_var.dir/build
+.PHONY : curve_fitting_jacobian_two_var/fast
+
+#=============================================================================
+# Target rules for targets named test_utils
+
+# Build rule for target.
+test_utils: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_utils
+.PHONY : test_utils
+
+# fast build rule for target.
+test_utils/fast:
+	$(MAKE) -f src/test/CMakeFiles/test_utils.dir/build.make src/test/CMakeFiles/test_utils.dir/build
+.PHONY : test_utils/fast
 
 # Help Target
 help:
@@ -183,11 +209,13 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... simple_case_one_dim"
-	@echo "... simple_case_muti_dim"
-	@echo "... curve_fitting_two_var"
-	@echo "... manual_jac_one_dim"
-	@echo "... manual_jac_muti_dim"
+	@echo "... fileio"
+	@echo "... curve_fitting_autodiff"
+	@echo "... curve_fitting_numdiff"
+	@echo "... curve_fitting_jacobian"
+	@echo "... curve_fitting_autodiff_two_var"
+	@echo "... curve_fitting_jacobian_two_var"
+	@echo "... test_utils"
 .PHONY : help
 
 

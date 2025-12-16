@@ -39,11 +39,13 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/lio/Desktop/ceres_workshop/build/src/simple_case_one_dim/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/simple_case_muti_dim/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_two_var/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/manual_jac_one_dim/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/manual_jac_muti_dim/cmake_install.cmake")
+  include("/home/lio/Desktop/ceres_workshop/build/src/fileio/cmake_install.cmake")
+  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_autodiff/cmake_install.cmake")
+  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_numdiff/cmake_install.cmake")
+  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian/cmake_install.cmake")
+  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_autodiff_two_var/cmake_install.cmake")
+  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian_two_var/cmake_install.cmake")
+  include("/home/lio/Desktop/ceres_workshop/build/src/test/cmake_install.cmake")
 
 endif()
 

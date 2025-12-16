@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/fileio/txtio.hpp
+iostream
+-
+fstream
+-
+sstream
+-
+vector
+-
+
+/home/lio/Desktop/ceres_workshop/src/curve_fitting_numdiff/main.cpp
+ceres/ceres.h
+/home/lio/Desktop/ceres_workshop/src/curve_fitting_numdiff/ceres/ceres.h
+txtio.hpp
+-
+iostream
+-
+chrono
+-
+

@@ -110,6 +110,36 @@ depend:
 	cd /home/lio/Desktop/ceres_workshop/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+# Convenience name for target.
+src/curve_fitting/CMakeFiles/curve_fitting.dir/rule:
+	cd /home/lio/Desktop/ceres_workshop/build && $(MAKE) -f CMakeFiles/Makefile2 src/curve_fitting/CMakeFiles/curve_fitting.dir/rule
+.PHONY : src/curve_fitting/CMakeFiles/curve_fitting.dir/rule
+
+# Convenience name for target.
+curve_fitting: src/curve_fitting/CMakeFiles/curve_fitting.dir/rule
+
+.PHONY : curve_fitting
+
+# fast build rule for target.
+curve_fitting/fast:
+	cd /home/lio/Desktop/ceres_workshop/build && $(MAKE) -f src/curve_fitting/CMakeFiles/curve_fitting.dir/build.make src/curve_fitting/CMakeFiles/curve_fitting.dir/build
+.PHONY : curve_fitting/fast
+
+# target to build an object file
+main.o:
+	cd /home/lio/Desktop/ceres_workshop/build && $(MAKE) -f src/curve_fitting/CMakeFiles/curve_fitting.dir/build.make src/curve_fitting/CMakeFiles/curve_fitting.dir/main.o
+.PHONY : main.o
+
+# target to preprocess a source file
+main.i:
+	cd /home/lio/Desktop/ceres_workshop/build && $(MAKE) -f src/curve_fitting/CMakeFiles/curve_fitting.dir/build.make src/curve_fitting/CMakeFiles/curve_fitting.dir/main.i
+.PHONY : main.i
+
+# target to generate assembly for a file
+main.s:
+	cd /home/lio/Desktop/ceres_workshop/build && $(MAKE) -f src/curve_fitting/CMakeFiles/curve_fitting.dir/build.make src/curve_fitting/CMakeFiles/curve_fitting.dir/main.s
+.PHONY : main.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -118,6 +148,10 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... curve_fitting"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 .PHONY : help
 
 
