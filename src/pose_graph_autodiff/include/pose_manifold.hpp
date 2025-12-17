@@ -74,7 +74,7 @@ public:
 
     // 這邊定義:
     //
-    //      ∂ (y ⊟ x)      |    
+    //      ∂ (y ⊟ x)     |    
     // --------------------|
     //        ∂ (y)        | y = x 
     bool MinusJacobian(const double* x, double* jacobian) const override;
