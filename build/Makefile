@@ -189,17 +189,17 @@ curve_fitting_jacobian_two_var/fast:
 .PHONY : curve_fitting_jacobian_two_var/fast
 
 #=============================================================================
-# Target rules for targets named pose_graph_autodiff
+# Target rules for targets named pose_graph_numdiff
 
 # Build rule for target.
-pose_graph_autodiff: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 pose_graph_autodiff
-.PHONY : pose_graph_autodiff
+pose_graph_numdiff: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 pose_graph_numdiff
+.PHONY : pose_graph_numdiff
 
 # fast build rule for target.
-pose_graph_autodiff/fast:
-	$(MAKE) -f src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/build.make src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/build
-.PHONY : pose_graph_autodiff/fast
+pose_graph_numdiff/fast:
+	$(MAKE) -f src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build.make src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build
+.PHONY : pose_graph_numdiff/fast
 
 #=============================================================================
 # Target rules for targets named test_utils
@@ -228,7 +228,7 @@ help:
 	@echo "... curve_fitting_jacobian"
 	@echo "... curve_fitting_autodiff_two_var"
 	@echo "... curve_fitting_jacobian_two_var"
-	@echo "... pose_graph_autodiff"
+	@echo "... pose_graph_numdiff"
 	@echo "... test_utils"
 .PHONY : help
 

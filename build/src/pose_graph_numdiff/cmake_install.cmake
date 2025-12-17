@@ -1,4 +1,4 @@
-# Install script for directory: /home/lio/Desktop/ceres_workshop/src
+# Install script for directory: /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,18 +35,5 @@ endif()
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/lio/Desktop/ceres_workshop/build/src/fileio/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_autodiff/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_numdiff/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_autodiff_two_var/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian_two_var/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/pose_graph_numdiff/cmake_install.cmake")
-  include("/home/lio/Desktop/ceres_workshop/build/src/test/cmake_install.cmake")
-
 endif()
 

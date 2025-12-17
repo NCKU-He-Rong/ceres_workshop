@@ -77,7 +77,7 @@ src/all: src/curve_fitting_numdiff/all
 src/all: src/curve_fitting_jacobian/all
 src/all: src/curve_fitting_autodiff_two_var/all
 src/all: src/curve_fitting_jacobian_two_var/all
-src/all: src/pose_graph_autodiff/all
+src/all: src/pose_graph_numdiff/all
 src/all: src/test/all
 
 .PHONY : src/all
@@ -89,7 +89,7 @@ src/preinstall: src/curve_fitting_numdiff/preinstall
 src/preinstall: src/curve_fitting_jacobian/preinstall
 src/preinstall: src/curve_fitting_autodiff_two_var/preinstall
 src/preinstall: src/curve_fitting_jacobian_two_var/preinstall
-src/preinstall: src/pose_graph_autodiff/preinstall
+src/preinstall: src/pose_graph_numdiff/preinstall
 src/preinstall: src/test/preinstall
 
 .PHONY : src/preinstall
@@ -101,7 +101,7 @@ src/clean: src/curve_fitting_numdiff/clean
 src/clean: src/curve_fitting_jacobian/clean
 src/clean: src/curve_fitting_autodiff_two_var/clean
 src/clean: src/curve_fitting_jacobian_two_var/clean
-src/clean: src/pose_graph_autodiff/clean
+src/clean: src/pose_graph_numdiff/clean
 src/clean: src/test/clean
 
 .PHONY : src/clean
@@ -215,22 +215,22 @@ src/fileio/clean: src/fileio/CMakeFiles/fileio.dir/clean
 .PHONY : src/fileio/clean
 
 #=============================================================================
-# Directory level rules for directory src/pose_graph_autodiff
+# Directory level rules for directory src/pose_graph_numdiff
 
 # Recursive "all" directory target.
-src/pose_graph_autodiff/all: src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/all
+src/pose_graph_numdiff/all: src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/all
 
-.PHONY : src/pose_graph_autodiff/all
+.PHONY : src/pose_graph_numdiff/all
 
 # Recursive "preinstall" directory target.
-src/pose_graph_autodiff/preinstall:
+src/pose_graph_numdiff/preinstall:
 
-.PHONY : src/pose_graph_autodiff/preinstall
+.PHONY : src/pose_graph_numdiff/preinstall
 
 # Recursive "clean" directory target.
-src/pose_graph_autodiff/clean: src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/clean
+src/pose_graph_numdiff/clean: src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/clean
 
-.PHONY : src/pose_graph_autodiff/clean
+.PHONY : src/pose_graph_numdiff/clean
 
 #=============================================================================
 # Directory level rules for directory src/test
@@ -413,31 +413,31 @@ src/curve_fitting_jacobian_two_var/CMakeFiles/curve_fitting_jacobian_two_var.dir
 .PHONY : src/curve_fitting_jacobian_two_var/CMakeFiles/curve_fitting_jacobian_two_var.dir/clean
 
 #=============================================================================
-# Target rules for target src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir
+# Target rules for target src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir
 
 # All Build rule for target.
-src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/all:
-	$(MAKE) -f src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/build.make src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/depend
-	$(MAKE) -f src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/build.make src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lio/Desktop/ceres_workshop/build/CMakeFiles --progress-num=13,14,15 "Built target pose_graph_autodiff"
-.PHONY : src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/all
+src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/all:
+	$(MAKE) -f src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build.make src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/depend
+	$(MAKE) -f src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build.make src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lio/Desktop/ceres_workshop/build/CMakeFiles --progress-num=13,14,15 "Built target pose_graph_numdiff"
+.PHONY : src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/all
 
 # Build rule for subdir invocation for target.
-src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/rule: cmake_check_build_system
+src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lio/Desktop/ceres_workshop/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lio/Desktop/ceres_workshop/build/CMakeFiles 0
-.PHONY : src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/rule
+.PHONY : src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/rule
 
 # Convenience name for target.
-pose_graph_autodiff: src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/rule
+pose_graph_numdiff: src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/rule
 
-.PHONY : pose_graph_autodiff
+.PHONY : pose_graph_numdiff
 
 # clean rule for target.
-src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/clean:
-	$(MAKE) -f src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/build.make src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/clean
-.PHONY : src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir/clean
+src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/clean:
+	$(MAKE) -f src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build.make src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/clean
+.PHONY : src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/clean
 
 #=============================================================================
 # Target rules for target src/test/CMakeFiles/test_utils.dir
