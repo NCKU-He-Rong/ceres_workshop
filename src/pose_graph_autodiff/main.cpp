@@ -6,6 +6,9 @@
 #include <chrono>
 #include <fstream>
 
+#include "pose_manifold.hpp"
+#include "costfunctor.hpp"
+
 
 // main fucntion
 int main(int argc, char*argv[])
@@ -36,8 +39,8 @@ int main(int argc, char*argv[])
     std::cout << "The Edge Number is: " << edgeLen << std::endl;
 
     // open the file again
-    fin.clear(); // 清除 EOF 狀態
-    fin.seekg(0, std::ios::beg); // 將檔案指標移回檔案開頭
+    fin.clear();                  // 清除 EOF 狀態
+    fin.seekg(0, std::ios::beg);  // 將檔案指標移回檔案開頭
 
     // create the state array
     double state[vertexLen][7];
@@ -68,10 +71,20 @@ int main(int argc, char*argv[])
             fin >> q.y();
             fin >> q.z();
             fin >> q.w();
+            q.normalize();
 
-            // TODO: add parameter block
+            ceres::Manifold * manifold = new PoseManifold();
 
-            // fix the first vertex
+            state[index][0] = t(0);
+            state[index][1] = t(1);
+            state[index][2] = t(2);
+            state[index][3] = q.w();
+            state[index][4] = q.x();
+            state[index][5] = q.y();
+            state[index][6] = q.z();
+
+            problem.AddParameterBlock(state[index], 7, manifold);
+
             if (index == 0)
             {   
                 // 透過SetParameterBlockConstant來fix相關參數
@@ -96,15 +109,19 @@ int main(int argc, char*argv[])
             fin >> q.y();
             fin >> q.z();
             fin >> q.w();
+            q.normalize();
             
             // get the information matrix
-            double InformationMatrix[21];
+            Eigen::Matrix<double, 21, 1> info_vec;
             for (int i=0 ; i<21 ; i++)
             {
-                fin >> InformationMatrix[i];
+                fin >> info_vec(i);
             }
 
-            // TODO: add residual block
+            ceres::CostFunction* cost_function = new ceres::NumericDiffCostFunction<costfunctor, ceres::CENTRAL, 6, 7, 7>
+                                                (new costfunctor(t, q, info_vec));
+            
+            problem.AddResidualBlock(cost_function, nullptr, state[index_i], state[index_j]);
         }
         
     }
@@ -117,6 +134,7 @@ int main(int argc, char*argv[])
     options.linear_solver_type = ceres::SPARSE_NORMAL_CHOLESKY;
     options.trust_region_strategy_type = ceres::LEVENBERG_MARQUARDT;  
     options.minimizer_progress_to_stdout = true;
+    options.num_threads = 4;
 
     // optimize the problem
     ceres::Solver::Summary summary;
@@ -129,7 +147,14 @@ int main(int argc, char*argv[])
     std::cout << summary.FullReport() << std::endl;   // 也可以用summary.BriefReport()
     std::cout << "[Time Spent] " << dura / 1000.0 << " ms" << std::endl;
 
-    // TODO: save the result 
+    // save the result 
+    std::ofstream fout("result.txt");
+    for (int i=0;i<vertexLen;i++)
+    {
+        fout << state[i][0] << " " 
+             << state[i][1] << " " 
+             << state[i][2] << std::endl;
+    }
 
     //return 
     return 0;

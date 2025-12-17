@@ -21,15 +21,16 @@ struct CostFunctor
     // bool operator()(const T* const x1, const T* const x2, T * residual) const
     // 並不固定,但要對應到後面的problem.AddResidualBlock中塞入最佳化變數的數量跟對象
     // 這邊注意如果沒有要自己定義jacobian(繼承SizedCostFunction),就要用template
-    template<typename T>
-    bool operator()(const T* const x, T* residual) const    // 跟g2o中的computerError()一樣
+    // 這邊注意如果你要用NumericDiffCostFunction,就可以不用定義template <typename T>了
+    // 他是double-only
+    bool operator()(const double* const x, double* residual) const    // 跟g2o中的computerError()一樣
     {   
         // 這邊就可以用std::exp了
         // 因為這邊我們不是用AutoDiffCostFunction
         // 也就是說當一些運算程式真的不支援AutoDiffCostFunction, ceres::中也找不到
         // 那我們就可能要切換到NumericDiffCostFunction
         // 當然後續要說明的自己定義解析解(jacobian)就沒有這個問題了
-        residual[0] = T(y_) - (x[2] / (x[0] + std::exp(-x[1]*x_)));   
+        residual[0] = y_ - (x[2] / (x[0] + std::exp(-x[1]*x_)));   
         return true;
     }
 

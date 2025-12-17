@@ -45,6 +45,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian/cmake_install.cmake")
   include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_autodiff_two_var/cmake_install.cmake")
   include("/home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian_two_var/cmake_install.cmake")
+  include("/home/lio/Desktop/ceres_workshop/build/src/pose_graph_autodiff/cmake_install.cmake")
   include("/home/lio/Desktop/ceres_workshop/build/src/test/cmake_install.cmake")
 
 endif()

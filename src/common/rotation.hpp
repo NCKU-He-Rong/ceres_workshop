@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 
 
+// TODO: 確保Quaterniond的等向性
 
 class Rotation
 {

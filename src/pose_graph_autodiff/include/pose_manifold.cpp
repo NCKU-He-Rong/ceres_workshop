@@ -45,6 +45,8 @@ bool PoseManifold::Plus(const double* x, const double* delta, double* x_plus_del
     // 注意這邊不要用Eigen::Map<Eigen::Quaterniond> q_plus(x_plus_delta+3)來更新
     // 因為一樣卡到Eigen的記憶體存放順序
     Eigen::Quaterniond q_plus = (q * delta_q).normalized();
+    if (q_plus.w() < 0) {q_plus.coeffs() *= -1;}
+    
     x_plus_delta[3] = q_plus.w();
     x_plus_delta[4] = q_plus.x();
     x_plus_delta[5] = q_plus.y();

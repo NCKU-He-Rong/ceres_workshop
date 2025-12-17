@@ -20,6 +20,9 @@
 /home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian_two_var/CMakeFiles/rebuild_cache.dir
 /home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian_two_var/CMakeFiles/edit_cache.dir
 /home/lio/Desktop/ceres_workshop/build/src/curve_fitting_jacobian_two_var/CMakeFiles/curve_fitting_jacobian_two_var.dir
+/home/lio/Desktop/ceres_workshop/build/src/pose_graph_autodiff/CMakeFiles/edit_cache.dir
+/home/lio/Desktop/ceres_workshop/build/src/pose_graph_autodiff/CMakeFiles/rebuild_cache.dir
+/home/lio/Desktop/ceres_workshop/build/src/pose_graph_autodiff/CMakeFiles/pose_graph_autodiff.dir
 /home/lio/Desktop/ceres_workshop/build/src/test/CMakeFiles/rebuild_cache.dir
 /home/lio/Desktop/ceres_workshop/build/src/test/CMakeFiles/edit_cache.dir
 /home/lio/Desktop/ceres_workshop/build/src/test/CMakeFiles/test_utils.dir
