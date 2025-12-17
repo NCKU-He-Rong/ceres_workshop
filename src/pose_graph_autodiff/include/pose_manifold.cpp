@@ -28,16 +28,18 @@ bool PoseManifold::Plus(const double* x, const double* delta, double* x_plus_del
     // 但注意Eigen::Quaternion內部記憶的的存放則是qx, qy, qz, qw
     // 所以以下的寫法,其實代表的是x[3] = qx, x[4] = qy, x[5] = qz, x[6] = qw
     // Eigen::Map<const Eigen::Quaterniond>q(x+3);
-    Eigen::Map<const Eigen::Vector3d> t(x);
-    Eigen::Quaterniond q(x[3], x[4], x[5], x[6]);
+    // 這邊以下雖然也可以寫成Eigen::Map<const Eigen::Vector3d> t(x);
+    // 但是其實意義不大(可能會快一點,因為不用再重新宣告記憶體),但這邊為了追求統一(跟Eigen::Quaterniond q一致)
+    // 所以改成這個以下這個
+    const Eigen::Vector3d t(x[0], x[1], x[2]);
+    const Eigen::Quaterniond q(x[3], x[4], x[5], x[6]);
     
-    Eigen::Map<const Eigen::Vector3d> delta_t(delta);
-    Eigen::Quaterniond delta_q = Rotation::rotvec2quaternion(Eigen::Map<const Eigen::Vector3d>(delta+3));
-
-    Eigen::Map<Eigen::Vector3d> t_plus(x_plus_delta);
+    const Eigen::Vector3d delta_t(delta[0], delta[1], delta[2]);
+    const Eigen::Quaterniond delta_q = Rotation::rotvec2quaternion(Eigen::Vector3d(delta[3], delta[4], delta[5]));
 
     // 位置更新 
-    t_plus = t + t_plus;
+    Eigen::Map<Eigen::Vector3d> t_plus(x_plus_delta);
+    t_plus = t + delta_t;
 
     // 姿態右擾動更新
     // 注意這邊不要用Eigen::Map<Eigen::Quaterniond> q_plus(x_plus_delta+3)來更新
@@ -54,29 +56,87 @@ bool PoseManifold::Plus(const double* x, const double* delta, double* x_plus_del
 
 bool PoseManifold::PlusJacobian(const double* x, double* jacobian) const
 {
+    const double qw = x[3];
+    const double qx = x[4];
+    const double qy = x[5];
+    const double qz = x[6];
     
+    Eigen::Map<Eigen::Matrix<double, 7, 6, Eigen::RowMajor>> j_plus(jacobian);
+    j_plus.setZero();
+
+    // 本pose_manifold.hpp /pose_manifold.cpp處理位移跟旋轉都是分開的
+    // 位移的jacobian
+    j_plus.block<3, 3>(0, 0).setIdentity();
+
+    // 旋轉的jacobian
+    j_plus(3, 3) = -0.5 * qx;
+    j_plus(3, 4) = -0.5 * qy;
+    j_plus(3, 5) = -0.5 * qz;
+
+    j_plus(4, 3) =  0.5 * qw;
+    j_plus(4, 4) = -0.5 * qz;
+    j_plus(4, 5) =  0.5 * qy;
+
+    j_plus(5, 3) =  0.5 * qz;
+    j_plus(5, 4) =  0.5 * qw;
+    j_plus(5, 5) = -0.5 * qx;
+
+    j_plus(6, 3) = -0.5 * qy;
+    j_plus(6, 4) =  0.5 * qx;
+    j_plus(6, 5) =  0.5 * qw;
+
+    return true;
+
 }
 
 bool PoseManifold::Minus(const double* y, const double* x, double* y_minus_x) const
 {
-    Eigen::Map<const Eigen::Vector3d> t_y(y);
-    Eigen::Quaterniond q_y(y[3], y[4], y[5], y[6]);
+    // 這邊以下雖然也可以寫成Eigen::Map<const Eigen::Vector3d> t_y(y);
+    // 但是其實意義不大(可能會快一點,因為不用再重新宣告記憶體),但這邊為了追求統一(跟Eigen::Quaterniond q一致)
+    // 所以改成這個以下這個
+    const Eigen::Vector3d t_y(y[0], y[1], y[2]);
+    const Eigen::Quaterniond q_y(y[3], y[4], y[5], y[6]);
 
-    // TODO: 修改成一致的作法
-    Eigen::Map<const Eigen::Vector3d> t_x(x);
-    Eigen::Quaterniond q_x(x[3], x[4], x[5], x[6]);
+    const Eigen::Vector3d t_x(x[0], x[1], x[2]);
+    const Eigen::Quaterniond q_x(x[3], x[4], x[5], x[6]);
 
-    Eigen::Map<const Eigen::Vector3d> t_y_minus_x(y_minus_x);
-    Eigen::Map<const Eigen::Vector3d> q_y_minus_x(y_minus_x+3);
+    Eigen::Map<Eigen::Vector3d> t_y_minus_x(y_minus_x);
+    Eigen::Map<Eigen::Vector3d> q_y_minus_x(y_minus_x+3);
 
     t_y_minus_x = t_y - t_x;
     q_y_minus_x = Rotation::quaternion2rotvec((q_x.inverse() * q_y).normalized());
 
+    return true;
 }
 
 bool PoseManifold::MinusJacobian(const double* x, double* jacobian) const
 {
+    const double qw = x[3];
+    const double qx = x[4];
+    const double qy = x[5];
+    const double qz = x[6];
+    
+    Eigen::Map<Eigen::Matrix<double, 6, 7, Eigen::RowMajor>> j_minus(jacobian);
+    j_minus.setZero();
 
+    // 位移的jacobian
+    j_minus.block<3, 3>(0, 0).setIdentity();
 
+    // 旋轉的jacobian
+    j_minus(3, 3) = -2.0 * qx;
+    j_minus(3, 4) =  2.0 * qw;
+    j_minus(3, 5) =  2.0 * qz;
+    j_minus(3, 6) = -2.0 * qy;
 
+    j_minus(4, 3) = -2.0 * qy;
+    j_minus(4, 4) = -2.0 * qz;
+    j_minus(4, 5) =  2.0 * qw;
+    j_minus(4, 6) =  2.0 * qx;
+
+    j_minus(5, 3) = -2.0 * qz;
+    j_minus(5, 4) =  2.0 * qy;
+    j_minus(5, 5) = -2.0 * qx;
+    j_minus(5, 6) =  2.0 * qw;
+
+    return true;
 }
