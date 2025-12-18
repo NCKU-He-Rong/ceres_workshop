@@ -40,6 +40,13 @@ int main(int argc, char** argv)
     std::cout << q_1.coeffs().transpose() << std::endl;
     std::cout << q_1.toRotationMatrix() << std::endl;
 
+
+    // 
+    Eigen::Matrix3d A;
+    A.setZero();
+    A(0, 0) = 2.0; A(1, 1) = 2.0;
+    std::cout << A.cwiseAbs().cwiseSqrt() << std::endl;
+
     
 
 

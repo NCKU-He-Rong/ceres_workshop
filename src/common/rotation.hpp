@@ -4,7 +4,6 @@
 #include <Eigen/Dense>
 
 
-// TODO: 確保Quaterniond的等向性
 
 class Rotation
 {
@@ -17,7 +16,16 @@ public:
     {
         double angle = rotvec.norm();
         Eigen::Vector3d vec = rotvec.normalized();
-        return Eigen::Quaterniond(Eigen::AngleAxisd(angle, vec));
+
+        // 這個打法Eigen,並不會自動幫我處理好Quaternion的方向性約束
+        Eigen::Quaterniond q(Eigen::AngleAxisd(angle, vec));
+
+        // 進行方向性的約束因為(q跟-q都是同一個涵義)
+        if (q.w() < 0) 
+        {
+            q.coeffs() *= -1;
+        }
+        return q;
     }
 
     // 將四元數表示法轉換成角軸表示法
@@ -29,8 +37,12 @@ public:
     // 同樣的以下打法都已經處理好了
     static Eigen::Vector3d quaternion2rotvec(const Eigen::Quaterniond &quaternion)
     {   
-        Eigen::AngleAxisd rotvec(quaternion);
+        Eigen::Quaterniond q(quaternion);
+        // 如果AngleAxisd是透過theta跟axis初始化,那其產出angle跟axis的時候"不會"幫我們都處理好(0~pi)之間
+        // 但如果AngleAxisd是透過quaternion初始化, 那其產出angle跟axis的時候"會"幫我們都處理好(0~pi)之間
+        Eigen::AngleAxisd rotvec(q);
         return rotvec.angle() * rotvec.axis();
+        
     }
 };
 #endif

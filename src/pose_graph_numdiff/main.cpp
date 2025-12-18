@@ -123,7 +123,6 @@ int main(int argc, char*argv[])
             
             problem.AddResidualBlock(cost_function, nullptr, state[index_i], state[index_j]);
         }
-        
     }
 
     // optimization setting
@@ -131,7 +130,7 @@ int main(int argc, char*argv[])
     options.max_num_iterations = 100;
     // 稀疏大範圍就用ceres::SPARSE_SCHUR或者ceres::SPARSE_NORMAL_CHOLESKY;
     // 這邊如果用Dense的話就會非常慢,如ceres::DENSE_QR
-    options.linear_solver_type = ceres::SPARSE_NORMAL_CHOLESKY;
+    options.linear_solver_type = ceres::SPARSE_SCHUR;
     options.trust_region_strategy_type = ceres::LEVENBERG_MARQUARDT;  
     options.minimizer_progress_to_stdout = true;
     options.num_threads = 4;
