@@ -3,6 +3,8 @@
 #include <rotation.hpp>
 
 
+// TODO: 改一下順序qw, qx ...
+
 int PoseManifold::AmbientSize() const
 {
     return 7;
@@ -25,7 +27,7 @@ bool PoseManifold::Plus(const double* x, const double* delta, double* x_plus_del
     Eigen::Map<Eigen::Quaterniond> q_plus(x_plus_delta+3);
 
     // 
-    t_plus = t + t_plus;
+    t_plus = t + delta_t;
     q_plus = (q * delta_q).normalized();
 
     return true;

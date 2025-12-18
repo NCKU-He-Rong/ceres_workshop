@@ -1,5 +1,5 @@
-#ifndef COST_FUNCTOR_HPP_
-#define COST_FUNCTOR_HPP_
+#ifndef COSTFUNCTOR_HPP_
+#define COSTFUNCTOR_HPP_
 
 #include "ceres/ceres.h"
 #include <Eigen/Dense>
@@ -43,7 +43,22 @@ struct costfunctor
         // 這邊針對NumericDiffCostFunction很關鍵
         // 因為NumericDiffCostFunction會去計算r(x+delta_x) - r(x-delta_x)來進行差分求導
         // 但相當可惜的是他的加法直接是歐式加法,不管我們定義的pose_manidfold,所以這邊operator()的
-        // 引數有機會傳入非單位四元數的狀態
+        // 引數有機會傳入非單位四元數的狀態,下面來自官方的說明(https://raw.githubusercontent.com/ceres-solver/ceres-solver/master/docs/source/nnls_modeling.rst)
+        /*
+            若你的 cost function 依賴某個必須位於流形上的參數區塊，
+            而該 functor 在此參數區塊不位於流形時無法被評估，
+            則對這類 functor 進行數值微分可能會遇到問題
+            這是因為 Ceres 的數值微分是透過擾動 cost functor 所依賴之參數區塊的各個座標分量來完成的
+            此種擾動隱含假設該參數區塊是位於歐式流形（Euclidean manifold）上，
+            而非該參數區塊實際對應的流形。因此，部分被擾動後的點可能不再位於該流形上,
+            例如，考慮一個四維參數區塊，其被解讀為單位四元數。對此參數區塊的座標分量進行擾動，
+            將會違反其單位范數（unit norm）的性質 要修正此問題，
+            需使 :class:NumericDiffCostFunction 能夠知悉每個參數區塊所對應的 :class:Manifold，
+            並且只在各參數區塊的局部切空間（local tangent space）中生成擾動,
+            目前我們認為此問題尚不足以嚴重到需要更改 :class:NumericDiffCostFunction 的 API
+            此外，在多數情況下，在 functor 使用該點之前，先將偏離流形的點投影回流形
+            通常相對容易,以四元數為例，在使用前先將該 4 維向量正規化即可解決
+        */
         q_xi.normalize();   
 
         Eigen::Vector3d t_xj(xj[0], xj[1], xj[2]);
@@ -58,7 +73,7 @@ struct costfunctor
         r_t = sqrt_mat.block<3, 3>(0, 0) * (q_mes * q_xj.inverse() * t_xi - q_mes * q_xj.inverse() * t_xj + t_mes);
 
         // 姿態誤差
-        r_q = sqrt_mat.block<3, 3>(3, 3) * (Rotation::quaternion2rotvec(q_mes * q_xj.inverse() * q_xi));
+        r_q = sqrt_mat.block<3, 3>(3, 3) * (Rotation::quaternion2rotvec((q_mes * q_xj.inverse() * q_xi).normalized()));
 
         return true;
     }
