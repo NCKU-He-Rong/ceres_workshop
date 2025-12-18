@@ -47,9 +47,15 @@ int main(int argc, char** argv)
     A(0, 0) = 2.0; A(1, 1) = 2.0;
     std::cout << A.cwiseAbs().cwiseSqrt() << std::endl;
 
+    Eigen::Vector3d vec(1.0, 2.0, 3.0);
+    std::cout << Rotation::so3_hat(vec) << std::endl;
+
+    std::cout << 1 / tan(M_PI / 2.0) << std::endl;
+
+
+    std::cout << Rotation::so3_jl_inv(theta*axis) << std::endl;
+    std::cout << Rotation::so3_jl_inv(Rotation::quaternion2rotvec(q_1)) << std::endl;
+
     
-
-
-
     return 0;
 }

@@ -18,6 +18,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "../src/curve_fitting_jacobian_two_var/CMakeLists.txt"
   "../src/curve_fitting_numdiff/CMakeLists.txt"
   "../src/fileio/CMakeLists.txt"
+  "../src/pose_graph_jacobian/CMakeLists.txt"
   "../src/pose_graph_numdiff/CMakeLists.txt"
   "../src/test/CMakeLists.txt"
   "/usr/lib/cmake/eigen3/Eigen3Config.cmake"
@@ -88,6 +89,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "src/curve_fitting_autodiff_two_var/CMakeFiles/CMakeDirectoryInformation.cmake"
   "src/curve_fitting_jacobian_two_var/CMakeFiles/CMakeDirectoryInformation.cmake"
   "src/pose_graph_numdiff/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "src/pose_graph_jacobian/CMakeFiles/CMakeDirectoryInformation.cmake"
   "src/test/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
@@ -100,5 +102,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "src/curve_fitting_autodiff_two_var/CMakeFiles/curve_fitting_autodiff_two_var.dir/DependInfo.cmake"
   "src/curve_fitting_jacobian_two_var/CMakeFiles/curve_fitting_jacobian_two_var.dir/DependInfo.cmake"
   "src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/DependInfo.cmake"
+  "src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/DependInfo.cmake"
   "src/test/CMakeFiles/test_utils.dir/DependInfo.cmake"
   )

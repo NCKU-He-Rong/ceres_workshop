@@ -6,5 +6,5 @@ CXX_FLAGS =  -Wall -O3   -std=gnu++17
 
 CXX_DEFINES = -DGFLAGS_IS_A_DLL=0
 
-CXX_INCLUDES = -I/home/lio/Desktop/ceres_workshop/src/common -I/home/lio/Desktop/ceres_workshop/src/fileio -I/home/lio/Desktop/ceres_workshop/src/curve_fitting_jacobian/include -isystem /usr/include/eigen3 
+CXX_INCLUDES = -I/home/lio/Desktop/ceres_workshop/src/common -I/home/lio/Desktop/ceres_workshop/src/fileio -isystem /usr/include/eigen3 
 

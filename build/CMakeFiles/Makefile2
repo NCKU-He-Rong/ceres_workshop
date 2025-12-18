@@ -78,6 +78,7 @@ src/all: src/curve_fitting_jacobian/all
 src/all: src/curve_fitting_autodiff_two_var/all
 src/all: src/curve_fitting_jacobian_two_var/all
 src/all: src/pose_graph_numdiff/all
+src/all: src/pose_graph_jacobian/all
 src/all: src/test/all
 
 .PHONY : src/all
@@ -90,6 +91,7 @@ src/preinstall: src/curve_fitting_jacobian/preinstall
 src/preinstall: src/curve_fitting_autodiff_two_var/preinstall
 src/preinstall: src/curve_fitting_jacobian_two_var/preinstall
 src/preinstall: src/pose_graph_numdiff/preinstall
+src/preinstall: src/pose_graph_jacobian/preinstall
 src/preinstall: src/test/preinstall
 
 .PHONY : src/preinstall
@@ -102,6 +104,7 @@ src/clean: src/curve_fitting_jacobian/clean
 src/clean: src/curve_fitting_autodiff_two_var/clean
 src/clean: src/curve_fitting_jacobian_two_var/clean
 src/clean: src/pose_graph_numdiff/clean
+src/clean: src/pose_graph_jacobian/clean
 src/clean: src/test/clean
 
 .PHONY : src/clean
@@ -213,6 +216,24 @@ src/fileio/preinstall:
 src/fileio/clean: src/fileio/CMakeFiles/fileio.dir/clean
 
 .PHONY : src/fileio/clean
+
+#=============================================================================
+# Directory level rules for directory src/pose_graph_jacobian
+
+# Recursive "all" directory target.
+src/pose_graph_jacobian/all: src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/all
+
+.PHONY : src/pose_graph_jacobian/all
+
+# Recursive "preinstall" directory target.
+src/pose_graph_jacobian/preinstall:
+
+.PHONY : src/pose_graph_jacobian/preinstall
+
+# Recursive "clean" directory target.
+src/pose_graph_jacobian/clean: src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/clean
+
+.PHONY : src/pose_graph_jacobian/clean
 
 #=============================================================================
 # Directory level rules for directory src/pose_graph_numdiff
@@ -419,7 +440,7 @@ src/curve_fitting_jacobian_two_var/CMakeFiles/curve_fitting_jacobian_two_var.dir
 src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/all:
 	$(MAKE) -f src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build.make src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/depend
 	$(MAKE) -f src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build.make src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lio/Desktop/ceres_workshop/build/CMakeFiles --progress-num=13,14,15 "Built target pose_graph_numdiff"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lio/Desktop/ceres_workshop/build/CMakeFiles --progress-num=16,17,18 "Built target pose_graph_numdiff"
 .PHONY : src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/all
 
 # Build rule for subdir invocation for target.
@@ -440,13 +461,40 @@ src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/clean:
 .PHONY : src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/clean
 
 #=============================================================================
+# Target rules for target src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir
+
+# All Build rule for target.
+src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/all:
+	$(MAKE) -f src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/build.make src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/depend
+	$(MAKE) -f src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/build.make src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lio/Desktop/ceres_workshop/build/CMakeFiles --progress-num=13,14,15 "Built target pose_graph_jacobian"
+.PHONY : src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/all
+
+# Build rule for subdir invocation for target.
+src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lio/Desktop/ceres_workshop/build/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lio/Desktop/ceres_workshop/build/CMakeFiles 0
+.PHONY : src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/rule
+
+# Convenience name for target.
+pose_graph_jacobian: src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/rule
+
+.PHONY : pose_graph_jacobian
+
+# clean rule for target.
+src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/clean:
+	$(MAKE) -f src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/build.make src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/clean
+.PHONY : src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir/clean
+
+#=============================================================================
 # Target rules for target src/test/CMakeFiles/test_utils.dir
 
 # All Build rule for target.
 src/test/CMakeFiles/test_utils.dir/all:
 	$(MAKE) -f src/test/CMakeFiles/test_utils.dir/build.make src/test/CMakeFiles/test_utils.dir/depend
 	$(MAKE) -f src/test/CMakeFiles/test_utils.dir/build.make src/test/CMakeFiles/test_utils.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lio/Desktop/ceres_workshop/build/CMakeFiles --progress-num=16,17 "Built target test_utils"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lio/Desktop/ceres_workshop/build/CMakeFiles --progress-num=19,20 "Built target test_utils"
 .PHONY : src/test/CMakeFiles/test_utils.dir/all
 
 # Build rule for subdir invocation for target.

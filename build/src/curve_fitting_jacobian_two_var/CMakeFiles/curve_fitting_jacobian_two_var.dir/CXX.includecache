@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../src/curve_fitting_jacobian_two_var/include/costfunctor.hpp
-ceres/ceres.h
-../src/curve_fitting_jacobian_two_var/include/ceres/ceres.h
-Eigen/Dense
--
-
 ../src/fileio/txtio.hpp
 iostream
 -
@@ -20,6 +14,12 @@ fstream
 sstream
 -
 vector
+-
+
+/home/lio/Desktop/ceres_workshop/src/curve_fitting_jacobian_two_var/include/costfunctor.hpp
+ceres/ceres.h
+/home/lio/Desktop/ceres_workshop/src/curve_fitting_jacobian_two_var/include/ceres/ceres.h
+Eigen/Dense
 -
 
 /home/lio/Desktop/ceres_workshop/src/curve_fitting_jacobian_two_var/main.cpp
@@ -31,8 +31,8 @@ iostream
 -
 chrono
 -
-costfunctor.hpp
-/home/lio/Desktop/ceres_workshop/src/curve_fitting_jacobian_two_var/costfunctor.hpp
+include/costfunctor.hpp
+/home/lio/Desktop/ceres_workshop/src/curve_fitting_jacobian_two_var/include/costfunctor.hpp
 
 /usr/include/eigen3/Eigen/Cholesky
 Core

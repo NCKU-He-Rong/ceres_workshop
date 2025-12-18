@@ -1,4 +1,3 @@
-include_directories(include)
 aux_source_directory(. SRC_LIST)
 list(APPEND SRC_LIST include/pose_manifold.cpp)
 add_executable(pose_graph_jacobian ${SRC_LIST})

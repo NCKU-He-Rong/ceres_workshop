@@ -6,8 +6,8 @@
 #include <chrono>
 #include <fstream>
 
-#include "pose_manifold.hpp"
-#include "costfunctor.hpp"
+#include "include/pose_manifold.hpp"
+#include "include/costfunctor.hpp"
 
 
 // main fucntion
@@ -118,8 +118,8 @@ int main(int argc, char*argv[])
                 fin >> info_vec(i);
             }
 
-            ceres::CostFunction* cost_function = new ceres::NumericDiffCostFunction<costfunctor, ceres::CENTRAL, 6, 7, 7>
-                                                (new costfunctor(t, q, info_vec));
+            ceres::CostFunction* cost_function = new ceres::NumericDiffCostFunction<CostFunctor, ceres::CENTRAL, 6, 7, 7>
+                                                (new CostFunctor(t, q, info_vec));
             
             problem.AddResidualBlock(cost_function, nullptr, state[index_i], state[index_j]);
         }

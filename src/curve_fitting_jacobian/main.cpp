@@ -7,7 +7,7 @@
 #include <chrono>
 
 // include the self-defined cost
-#include "costfunctor.hpp"
+#include "include/costfunctor.hpp"
 
 // main function
 int main(int argc, char*argv[])

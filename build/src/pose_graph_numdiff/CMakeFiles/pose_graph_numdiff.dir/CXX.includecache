@@ -10,27 +10,13 @@
 Eigen/Dense
 -
 
-../src/pose_graph_numdiff/include/costfunctor.hpp
+/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/costfunctor.hpp
 ceres/ceres.h
-../src/pose_graph_numdiff/include/ceres/ceres.h
+/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/ceres/ceres.h
 Eigen/Dense
 -
 rotation.hpp
-../src/pose_graph_numdiff/include/rotation.hpp
-
-../src/pose_graph_numdiff/include/pose_manifold.hpp
-ceres/ceres.h
--
-Eigen/Dense
--
-
-/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.cpp
-pose_manifold.hpp
-/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.hpp
-Eigen/Dense
--
-rotation.hpp
--
+/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/rotation.hpp
 
 /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.hpp
 ceres/ceres.h
@@ -47,10 +33,10 @@ chrono
 -
 fstream
 -
-pose_manifold.hpp
-/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/pose_manifold.hpp
-costfunctor.hpp
-/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/costfunctor.hpp
+include/pose_manifold.hpp
+/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.hpp
+include/costfunctor.hpp
+/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/costfunctor.hpp
 
 /usr/include/eigen3/Eigen/Cholesky
 Core

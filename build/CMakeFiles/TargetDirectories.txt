@@ -23,6 +23,9 @@
 /home/lio/Desktop/ceres_workshop/build/src/pose_graph_numdiff/CMakeFiles/rebuild_cache.dir
 /home/lio/Desktop/ceres_workshop/build/src/pose_graph_numdiff/CMakeFiles/edit_cache.dir
 /home/lio/Desktop/ceres_workshop/build/src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir
+/home/lio/Desktop/ceres_workshop/build/src/pose_graph_jacobian/CMakeFiles/edit_cache.dir
+/home/lio/Desktop/ceres_workshop/build/src/pose_graph_jacobian/CMakeFiles/rebuild_cache.dir
+/home/lio/Desktop/ceres_workshop/build/src/pose_graph_jacobian/CMakeFiles/pose_graph_jacobian.dir
 /home/lio/Desktop/ceres_workshop/build/src/test/CMakeFiles/rebuild_cache.dir
 /home/lio/Desktop/ceres_workshop/build/src/test/CMakeFiles/edit_cache.dir
 /home/lio/Desktop/ceres_workshop/build/src/test/CMakeFiles/test_utils.dir

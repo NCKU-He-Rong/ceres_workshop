@@ -4,7 +4,6 @@
 #include <Eigen/Dense>
 
 
-
 class Rotation
 {
 public:
@@ -44,5 +43,125 @@ public:
         return rotvec.angle() * rotvec.axis();
         
     }
+
+    static Eigen::Matrix3d so3_hat(const Eigen::Vector3d &vec)
+    {
+        Eigen::Matrix3d mat;
+        mat.setZero();
+        mat(0, 1) = -vec(2); mat(1, 0) =  vec(2);
+        mat(0, 2) =  vec(1); mat(2, 0) = -vec(1);
+        mat(1, 2) = -vec(0); mat(2, 1) =  vec(0);
+
+        return mat;
+    }
+
+    // TODO: 要確保abs(theta)是小於pi的
+    // TODO: 找看看比較不會有theta在下面的情況
+    static Eigen::Matrix3d so3_jr(const Eigen::Vector3d &vec)
+    {
+        Eigen::Matrix3d mat;
+
+        double theta = vec.norm();
+        Eigen::Vector3d axis = vec.normalized();
+
+        if (theta < 1e-12)
+        {
+            mat.setIdentity();
+            return mat;
+        }
+        else
+        {
+            double coeff_1 = sin(theta) / theta;
+            double coeff_2 = (1-cos(theta)) / theta;
+
+            mat = coeff_1 * Eigen::Matrix3d::Identity() + 
+                 (1-coeff_1) * axis * axis.transpose() - 
+                  coeff_2 * so3_hat(axis);
+            
+            return mat;
+        }
+    }
+
+    // 要確保abs(theta)是小於pi的
+    static Eigen::Matrix3d so3_jr_inv(const Eigen::Vector3d &vec)
+    {
+        Eigen::Matrix3d mat;
+
+        double theta = vec.norm();
+        Eigen::Vector3d axis = vec.normalized();
+
+        if (theta < 1e-12)
+        {
+            mat.setIdentity();
+            return mat;
+        }
+        else
+        {   
+            // 這邊有一個技巧,不要使用1/tan(),雖然它會給也不會報錯,給你很接近0的數字
+            double coeff = (theta / 2)  * cos(theta / 2) / sin(theta / 2);
+            mat = coeff * Eigen::Matrix3d::Identity() + 
+                 (1- coeff) * axis * axis.transpose() + 
+                 (theta / 2) * so3_hat(axis);
+            
+            return mat;
+        }
+
+        return mat;
+    }
+
+    // 要確保abs(theta)是小於pi的
+    static Eigen::Matrix3d so3_jl(const Eigen::Vector3d &vec)
+    {
+        Eigen::Matrix3d mat;
+
+        double theta = vec.norm();
+        Eigen::Vector3d axis = vec.normalized();
+
+        if (theta < 1e-12)
+        {
+            mat.setIdentity();
+            return mat;
+        }
+        else
+        {
+            double coeff_1 = sin(theta) / theta;
+            double coeff_2 = (1-cos(theta)) / theta;
+
+            mat = coeff_1 * Eigen::Matrix3d::Identity() + 
+                 (1-coeff_1) * axis * axis.transpose() + 
+                  coeff_2 * so3_hat(axis);
+            
+            return mat;
+        }
+    }
+
+    // 要確保abs(theta)是小於pi的
+    static Eigen::Matrix3d so3_jl_inv(const Eigen::Vector3d &vec)
+    {
+        Eigen::Matrix3d mat;
+
+        double theta = vec.norm();
+        Eigen::Vector3d axis = vec.normalized();
+
+        if (theta < 1e-12)
+        {
+            mat.setIdentity();
+            return mat;
+        }
+        else
+        {   
+            // 這邊有一個技巧,不要使用1/tan(),雖然它會給也不會報錯,給你很接近0的數字
+            double coeff = (theta / 2)  * cos(theta / 2) / sin(theta / 2);
+            mat = coeff * Eigen::Matrix3d::Identity() + 
+                 (1- coeff) * axis * axis.transpose() - 
+                 (theta / 2) * so3_hat(axis);
+            
+            return mat;
+        }
+        return mat;
+    }
+
+
+
 };
 #endif

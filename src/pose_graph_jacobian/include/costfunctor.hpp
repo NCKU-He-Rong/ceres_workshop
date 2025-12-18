@@ -7,10 +7,10 @@
 #include "rotation.hpp"
 
 
-class costfunctor: public ceres::SizedCostFunction<6, 7, 7>
+class CostFunctor: public ceres::SizedCostFunction<6, 7, 7>
 {
 public:
-    costfunctor(const Eigen::Vector3d &t,
+    CostFunctor(const Eigen::Vector3d &t,
                 const Eigen::Quaterniond &q,
                 const Eigen::Matrix<double, 21, 1> &info_vec)
                 : t_mes(t), q_mes(q)
@@ -39,12 +39,13 @@ public:
         Eigen::Vector3d t_xj(parameters[1][0], parameters[1][1], parameters[1][2]);
         Eigen::Quaterniond q_xj(parameters[1][3], parameters[1][4], parameters[1][5], parameters[1][6]);
 
-        Eigen::Map<Eigen::Vector3d> r_t(residual);
-        Eigen::Map<Eigen::Vector3d> r_q(residual+3);
+        Eigen::Map<Eigen::Vector3d> r_t_w(residual);
+        Eigen::Map<Eigen::Vector3d> r_q_w(residual+3);
 
-        r_t = sqrt_info_mat.block<3, 3>(0, 0) * q_mes * q_xj.inverse() * t_xi - q_mes * q_xj.inverse() * t_xj + t_mes;
+        r_t_w = sqrt_info_mat.block<3, 3>(0, 0) * (q_mes * q_xj.inverse() * t_xi - q_mes * q_xj.inverse() * t_xj + t_mes);
 
-        r_q = sqrt_info_mat.block<3, 3>(3, 3) * Rotation::quaternion2rotvec((q_mes * q_xj.inverse() * q_xi).normalized());
+        Eigen::Vector3d r_q = Rotation::quaternion2rotvec((q_mes * q_xj.inverse() * q_xi).normalized());
+        r_q_w = sqrt_info_mat.block<3, 3>(3, 3) * r_q;
 
         
         if (jacobians != nullptr)
@@ -54,7 +55,8 @@ public:
                 Eigen::Map<Eigen::Matrix<double, 6, 7, Eigen::RowMajor>> j_xi(jacobians[0]);
                 j_xi.setZero();
                 j_xi.block<3, 3>(0, 0) = (q_mes * q_xj.inverse()).toRotationMatrix();
-
+                j_xi.block<3, 3>(3, 3) = Rotation::so3_jr_inv(r_q);
+                j_xi = sqrt_info_mat * j_xi;
             }
 
             if (jacobians[1] != nullptr)
@@ -62,7 +64,8 @@ public:
                 Eigen::Map<Eigen::Matrix<double, 6, 7, Eigen::RowMajor>> j_xj(jacobians[1]);
                 j_xj.setZero();
                 j_xj.block<3, 3>(0, 0) = -(q_mes * q_xj.inverse()).toRotationMatrix();
-            
+                j_xj.block<3, 3>(3, 3) = -Rotation::so3_jl_inv(r_q) * q_mes.toRotationMatrix();
+                j_xj = sqrt_info_mat * j_xj;
             }
 
         }

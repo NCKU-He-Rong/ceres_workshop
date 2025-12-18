@@ -6,9 +6,9 @@
 #include "rotation.hpp"
 
 
-struct costfunctor
+struct CostFunctor
 {
-    costfunctor(const Eigen::Vector3d &t, 
+    CostFunctor(const Eigen::Vector3d &t, 
                 const Eigen::Quaterniond &q,
                 const Eigen::Matrix<double, 21, 1> &info_vec)
                 : t_mes(t), q_mes(q)

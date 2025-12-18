@@ -214,8 +214,8 @@ src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/include/pose_manifold.o
  /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 src/pose_graph_numdiff/CMakeFiles/pose_graph_numdiff.dir/main.o
  ../src/common/rotation.hpp
- ../src/pose_graph_numdiff/include/costfunctor.hpp
- ../src/pose_graph_numdiff/include/pose_manifold.hpp
+ /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/costfunctor.hpp
+ /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.hpp
  /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/main.cpp
  /usr/include/eigen3/Eigen/Cholesky
  /usr/include/eigen3/Eigen/Core
