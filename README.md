@@ -38,7 +38,7 @@ lib/                 # 編譯生成的庫文件
    ```bash
    mkdir build
    cd build
-   cmake ..
+   cmake -DCMAKE_BUILD_TYPE=debug ..  # cmake -DCMAKE_BUILD_TYPE=release ..
    make
    ```
 

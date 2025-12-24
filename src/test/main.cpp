@@ -1,14 +1,15 @@
 #include <iostream>
-#include <rotation.hpp>
+#include "rotation.hpp"
 #include <Eigen/Dense>
 
 
 
 int main(int argc, char** argv)
-{
-    double theta = 270 * M_PI / 180.0;
+{   
+    double angle = std::stod(argv[1]);
+    double theta = angle * M_PI / 180.0;
 
-    Eigen::Vector3d axis(2.0, 1.0, 3.0);
+    Eigen::Vector3d axis(2.0, -1.0, 3.0);
     axis.normalize();
 
     Eigen::Quaterniond q_1 = Rotation::rotvec2quaternion(theta * axis);
@@ -53,9 +54,46 @@ int main(int argc, char** argv)
     std::cout << 1 / tan(M_PI / 2.0) << std::endl;
 
 
-    std::cout << Rotation::so3_jl_inv(theta*axis) << std::endl;
-    std::cout << Rotation::so3_jl_inv(Rotation::quaternion2rotvec(q_1)) << std::endl;
+    // 這邊會觸發assert,不論release or debug mode(因為我加入了#undef NDEBUG in rotation.hpp)
+    // std::cout << Rotation::so3_jl_inv(theta*axis) << std::endl;
+    // std::cout << Rotation::so3_jl_inv(Rotation::quaternion2rotvec(q_1)) << std::endl;
 
-    
+
+    Eigen::Matrix<double, 6, 7> j_1;
+    j_1.setZero();
+    j_1.topRows<6>().setIdentity();
+
+    Eigen::Matrix<double, 6, 7> j_2;
+    j_2.setZero();
+    j_2.rightCols<6>().setIdentity();
+
+    std::cout << j_1 << std::endl;
+    std::cout << std::endl;
+    std::cout << j_2 << std::endl;
+
+    Eigen::Matrix<double, 6, 1> se3;
+    se3.setRandom();
+    std::cout << se3 << std::endl;
+    std::cout << Rotation::se3_hat(se3) << std::endl;
+    std::cout << Rotation::se3_vee(Rotation::se3_hat(se3)) << std::endl;
+
+    Eigen::Matrix3d rot_mat = Rotation::so3_exp(theta * axis);
+    Eigen::Vector3d rot_lie = Rotation::so3_log(rot_mat);
+    std::cout << axis << std::endl;
+    std::cout << (theta * axis).transpose() << std::endl;
+    std::cout << (rot_lie).transpose() << std::endl;
+
+    std::cout << "---" << std::endl;
+    Eigen::Matrix4d T_mat;
+    T_mat.setZero();T_mat(3, 3) = 1;
+    T_mat.block<3, 1>(0, 3) = Eigen::Vector3d::Random();
+    T_mat.block<3, 3>(0, 0) = rot_mat;
+    Eigen::Matrix<double, 6, 1> T_lie = Rotation::se3_log(T_mat);
+    Eigen::Matrix4d T_mat_recover = Rotation::se3_exp(T_lie);
+    std::cout << T_mat << std::endl;
+    std::cout << T_mat_recover << std::endl;
+
+
+
     return 0;
 }

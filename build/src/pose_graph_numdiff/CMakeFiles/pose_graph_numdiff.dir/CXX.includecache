@@ -9,6 +9,10 @@
 ../src/common/rotation.hpp
 Eigen/Dense
 -
+iostream
+-
+stdexcept
+-
 
 /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/costfunctor.hpp
 ceres/ceres.h
@@ -17,6 +21,14 @@ Eigen/Dense
 -
 rotation.hpp
 /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/rotation.hpp
+
+/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.cpp
+pose_manifold.hpp
+/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.hpp
+Eigen/Dense
+-
+rotation.hpp
+-
 
 /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.hpp
 ceres/ceres.h

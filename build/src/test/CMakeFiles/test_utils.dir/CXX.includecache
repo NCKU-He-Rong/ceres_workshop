@@ -9,12 +9,16 @@
 ../src/common/rotation.hpp
 Eigen/Dense
 -
+iostream
+-
+stdexcept
+-
 
 /home/lio/Desktop/ceres_workshop/src/test/main.cpp
 iostream
 -
 rotation.hpp
--
+/home/lio/Desktop/ceres_workshop/src/test/rotation.hpp
 Eigen/Dense
 -
 

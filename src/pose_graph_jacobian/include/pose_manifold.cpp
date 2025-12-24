@@ -85,10 +85,12 @@ bool PoseManifold::Minus(const double* y, const double* x, double* y_minus_x) co
     return true;
 }
 
+// 這邊個東西其實用不到,你可以直接return true就好,也不會影響
+// 這邊這樣的打法是參考OB_GINS的
 bool PoseManifold::MinusJacobian(const double* x, double* jacobian) const
-{
+{   
     Eigen::Map<Eigen::Matrix<double, 6, 7, Eigen::RowMajor>> j_minus(jacobian);
     j_minus.setZero();
-    j_minus.topRows<6>().setIdentity();
+    j_minus.rightCols<6>().setIdentity();
     return true;
 }

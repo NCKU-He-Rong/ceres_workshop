@@ -1,0 +1,237 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10
+					],
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src"
+				},
+				{
+					"build" : "src/fileio",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/fileio",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "src/curve_fitting_autodiff",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/curve_fitting_autodiff",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "src/curve_fitting_numdiff",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/curve_fitting_numdiff",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "src/curve_fitting_jacobian",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/curve_fitting_jacobian",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "src/curve_fitting_autodiff_two_var",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/curve_fitting_autodiff_two_var",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "src/curve_fitting_jacobian_two_var",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/curve_fitting_jacobian_two_var",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "src/pose_graph_numdiff",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/pose_graph_numdiff",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "src/pose_graph_jacobian",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/pose_graph_jacobian",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "src/test",
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/test",
+					"targetIndexes" : 
+					[
+						8
+					]
+				}
+			],
+			"name" : "release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10
+					],
+					"name" : "ceres_workshop",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 3,
+					"id" : "curve_fitting_autodiff::@d9fcd5ef8bf20ec994cf",
+					"jsonFile" : "target-curve_fitting_autodiff-release-118e33fa1edc04e23fb3.json",
+					"name" : "curve_fitting_autodiff",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "curve_fitting_autodiff_two_var::@1c4ca1de7c956a0cb002",
+					"jsonFile" : "target-curve_fitting_autodiff_two_var-release-1524f24f1b6eb77438bb.json",
+					"name" : "curve_fitting_autodiff_two_var",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "curve_fitting_jacobian::@e6c213d0aa435531f368",
+					"jsonFile" : "target-curve_fitting_jacobian-release-6eb92798a0cb9c83ec34.json",
+					"name" : "curve_fitting_jacobian",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "curve_fitting_jacobian_two_var::@e5957ecbe3bee0cf820e",
+					"jsonFile" : "target-curve_fitting_jacobian_two_var-release-5b0b77d232cbfbac86d0.json",
+					"name" : "curve_fitting_jacobian_two_var",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "curve_fitting_numdiff::@5086e397831ad740ce5c",
+					"jsonFile" : "target-curve_fitting_numdiff-release-64df84ec82bce8112998.json",
+					"name" : "curve_fitting_numdiff",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "fileio::@38e442d70934c5fecc84",
+					"jsonFile" : "target-fileio-release-6be9eff24798c5514582.json",
+					"name" : "fileio",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "pose_graph_jacobian::@79abbe3f8e58c22e7cfc",
+					"jsonFile" : "target-pose_graph_jacobian-release-bfad505a891554df6d26.json",
+					"name" : "pose_graph_jacobian",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "pose_graph_numdiff::@f13c5ea136c90dced4f0",
+					"jsonFile" : "target-pose_graph_numdiff-release-0a3d946fe77294205da9.json",
+					"name" : "pose_graph_numdiff",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "test_utils::@b7fcbc08bf8df37e9c1b",
+					"jsonFile" : "target-test_utils-release-1e04a5de18e6a01a33b3.json",
+					"name" : "test_utils",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/lio/Desktop/ceres_workshop/build",
+		"source" : "/home/lio/Desktop/ceres_workshop"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

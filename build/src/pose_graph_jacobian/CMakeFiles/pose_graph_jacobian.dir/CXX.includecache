@@ -9,6 +9,10 @@
 ../src/common/rotation.hpp
 Eigen/Dense
 -
+iostream
+-
+stdexcept
+-
 
 /home/lio/Desktop/ceres_workshop/src/pose_graph_jacobian/include/costfunctor.hpp
 Eigen/Dense

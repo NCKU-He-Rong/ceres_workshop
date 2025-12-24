@@ -1,5 +1,7 @@
 project(ceres_workshop)
 
+message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
+
 # set build type and flags
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")

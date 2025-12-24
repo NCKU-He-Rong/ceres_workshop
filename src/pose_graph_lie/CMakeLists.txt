@@ -1,0 +1,4 @@
+aux_source_directory(. SRC_LIST)
+list(APPEND SRC_LIST include/pose_manifold.cpp)
+add_executable(pose_graph_lie ${SRC_LIST})
+target_link_libraries(pose_graph_lie ${CERES_LIBRARIES})

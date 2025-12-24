@@ -2,11 +2,15 @@
 #define ROTATION_HPP_
 
 #include <Eigen/Dense>
+#include <iostream>
+#include <stdexcept>
 
 
 class Rotation
 {
 public:
+    static constexpr double tol = 1e-12;
+
     // 將角軸表示法轉換成四元數表示法
     // 這邊不使用公式的原因是(就是cos(theta/2)...),程式還需要去判斷theta是否靠近0
     // 否則計算 axis vector的時候有機會爆炸
@@ -48,6 +52,7 @@ public:
     {
         Eigen::Matrix3d mat;
         mat.setZero();
+
         mat(0, 1) = -vec(2); mat(1, 0) =  vec(2);
         mat(0, 2) =  vec(1); mat(2, 0) = -vec(1);
         mat(1, 2) = -vec(0); mat(2, 1) =  vec(0);
@@ -55,16 +60,89 @@ public:
         return mat;
     }
 
-    // TODO: 要確保abs(theta)是小於pi的
-    // TODO: 找看看比較不會有theta在下面的情況
+    static Eigen::Vector3d so3_vee(const Eigen::Matrix3d &mat)
+    {
+        Eigen::Vector3d vec;
+        vec.setZero();
+        vec(0) = mat(2, 1);
+        vec(1) = mat(0, 2);
+        vec(2) = mat(1, 0);
+        
+        return vec;
+    }
+
+    static Eigen::Matrix3d so3_exp(const Eigen::Vector3d &vec)
+    {
+        Eigen::Matrix3d mat;
+
+        double theta = vec.norm();
+        ensure(theta <= (M_PI + tol), "Angle-axis representation requires |theta| <= pi");
+
+        Eigen::Vector3d axis = vec.normalized();
+
+        if (abs(theta) < tol)
+        {   
+            mat.setIdentity();
+            return mat;
+
+        }
+        else
+        {
+            mat = (1-cos(theta))*axis*axis.transpose() + sin(theta) * so3_hat(axis) + cos(theta) * Eigen::Matrix3d::Identity();
+            return mat;
+        }
+    }
+
+    static Eigen::Vector3d so3_log(const Eigen::Matrix3d &mat)
+    {
+        Eigen::Vector3d vec;
+
+        ensure(abs(mat.determinant() - 1) <= tol, "Input Matrix is not a rotation matrix (det != 1)");
+
+
+        // 
+        Eigen::Vector3d axis(mat(2, 1) - mat(1, 2), 
+                             mat(0, 2) - mat(2, 0),
+                             mat(1, 0) - mat(0, 1));
+
+        // 這邊傳統透過arccos的方式,在M_PI跟0附近數值相當敏感,所以要用atan2比較好
+        double cth = (mat.trace() - 1.0 ) / 2.0;
+        double sin = axis.norm();
+
+        double theta = atan2(0.5*sin, cth);   // [-pi-pi]
+        
+        if (abs(theta) < tol)
+        {
+            return Eigen::Vector3d::Zero();
+        }
+        else if (abs(theta - M_PI) < tol)
+        {
+            Eigen::Matrix3d A = mat - Eigen::Matrix3d::Identity();
+            Eigen::JacobiSVD<Eigen::Matrix3d> svd(A, Eigen::ComputeFullV);
+            Eigen::Vector3d axis = svd.matrixV().col(2);
+            axis.normalize();
+            
+            return theta * axis;
+        }
+        else
+        {
+            axis.normalize();
+            return theta * axis;
+        }
+    }
+
     static Eigen::Matrix3d so3_jr(const Eigen::Vector3d &vec)
     {
         Eigen::Matrix3d mat;
 
         double theta = vec.norm();
+
+        // 注意這個如果CMake設定成Release Mode就完全不會檢查這個了,直接跳過
+        ensure(theta <= (M_PI + tol), "Angle-axis representation requires |theta| <= pi");
+
         Eigen::Vector3d axis = vec.normalized();
 
-        if (theta < 1e-12)
+        if (abs(theta) < tol)
         {
             mat.setIdentity();
             return mat;
@@ -88,9 +166,12 @@ public:
         Eigen::Matrix3d mat;
 
         double theta = vec.norm();
+        // 注意這個如果CMake設定成Release Mode就完全不會檢查這個了,直接跳過
+        ensure(theta <= (M_PI + tol), "Angle-axis representation requires |theta| <= pi");
+
         Eigen::Vector3d axis = vec.normalized();
 
-        if (theta < 1e-12)
+        if (abs(theta) < tol)
         {
             mat.setIdentity();
             return mat;
@@ -115,9 +196,12 @@ public:
         Eigen::Matrix3d mat;
 
         double theta = vec.norm();
+        // 注意這個如果CMake設定成Release Mode就完全不會檢查這個了,直接跳過
+        ensure(theta <= (M_PI + tol), "Angle-axis representation requires |theta| <= pi");
+
         Eigen::Vector3d axis = vec.normalized();
 
-        if (theta < 1e-12)
+        if (abs(theta) < tol)
         {
             mat.setIdentity();
             return mat;
@@ -141,9 +225,13 @@ public:
         Eigen::Matrix3d mat;
 
         double theta = vec.norm();
+
+        // 注意這個如果CMake設定成Release Mode就完全不會檢查這個了,直接跳過
+        ensure(theta <= (M_PI + tol) , "Angle-axis representation requires |theta| <= pi");
+        
         Eigen::Vector3d axis = vec.normalized();
 
-        if (theta < 1e-12)
+        if (abs(theta) < tol)
         {
             mat.setIdentity();
             return mat;
@@ -162,6 +250,126 @@ public:
     }
 
 
+    static Eigen::Matrix4d se3_hat(const Eigen::Matrix<double, 6, 1> &vec)
+    {
+        Eigen::Matrix4d mat;
+        mat.setZero();
+
+        mat.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
+        mat.block<3, 1>(0, 3) = vec.head<3>();
+
+        return mat;
+    }
+
+    static Eigen::Matrix<double, 6, 1> se3_vee(const Eigen::Matrix4d &mat)
+    {
+        Eigen::Matrix<double, 6, 1> vec;
+        vec.setZero();
+        vec.head<3>() = mat.block<3, 1>(0, 3);
+        vec.tail<3>() = so3_vee(mat.block<3, 3>(0, 0));
+
+        return vec;
+    }
+
+    static Eigen::Matrix4d se3_exp(const Eigen::Matrix<double, 6, 1> &vec)
+    {
+        Eigen::Matrix4d mat;
+        mat.setZero();
+        mat(3, 3) = 1;
+
+        mat.block<3, 3>(0, 0) = so3_exp(vec.tail<3>());
+        mat.block<3, 1>(0, 3) = so3_jl(vec.tail<3>()) * vec.head<3>();
+
+        return mat;
+    }
+
+    static Eigen::Matrix<double, 6, 1> se3_log(const Eigen::Matrix4d &mat)
+    {
+        ensure(abs(mat(3, 3) - 1.0) < tol, "Input Matrix is not a transformation matrix");
+        Eigen::Matrix<double, 6, 1> vec;
+        vec.setZero();
+        vec.tail<3>() = so3_log(mat.block<3, 3>(0, 0));
+        vec.head<3>() = so3_jl_inv(vec.tail<3>()) * mat.block<3, 1>(0, 3);
+
+        return vec;
+    }
+
+    static Eigen::Matrix<double, 6, 6> se3_jr(const Eigen::Matrix<double, 6, 1> &vec)
+    {
+        Eigen::Matrix<double, 6, 6> mat;
+
+        ensure(vec.tail<3>().norm() <= (M_PI + tol) , "Angle-axis representation requires |theta| <= pi");
+
+        Eigen::Matrix<double, 6, 6> coeff;
+        coeff.setZero();
+        coeff.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
+        coeff.block<3, 3>(3, 3) = so3_hat(vec.tail<3>());
+        coeff.block<3, 3>(0, 3) = so3_hat(vec.head<3>());
+
+        mat = Eigen::Matrix<double, 6, 6>::Identity() - 0.5*coeff;
+    
+        return mat;
+    }
+
+    static Eigen::Matrix<double, 6, 6> se3_jr_inv(const Eigen::Matrix<double, 6, 1> &vec)
+    {
+        Eigen::Matrix<double, 6, 6> mat;
+
+        ensure(vec.tail<3>().norm() <= (M_PI + tol) , "Angle-axis representation requires |theta| <= pi");
+
+        Eigen::Matrix<double, 6, 6> coeff;
+        coeff.setZero();
+        coeff.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
+        coeff.block<3, 3>(3, 3) = so3_hat(vec.tail<3>());
+        coeff.block<3, 3>(0, 3) = so3_hat(vec.head<3>());
+
+        mat = Eigen::Matrix<double, 6, 6>::Identity() + 0.5*coeff;
+
+        return mat;
+    }
+
+    static Eigen::Matrix<double, 6, 6> se3_jl(const Eigen::Matrix<double, 6, 1> &vec)
+    {
+        Eigen::Matrix<double, 6, 6> mat;
+
+        ensure(vec.tail<3>().norm() <= (M_PI + tol) , "Angle-axis representation requires |theta| <= pi");
+
+        Eigen::Matrix<double, 6, 6> coeff;
+        coeff.setZero();
+        coeff.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
+        coeff.block<3, 3>(3, 3) = so3_hat(vec.tail<3>());
+        coeff.block<3, 3>(0, 3) = so3_hat(vec.head<3>());
+
+        mat = Eigen::Matrix<double, 6, 6>::Identity() + 0.5*coeff;
+
+        return mat;
+    }
+
+    static Eigen::Matrix<double, 6, 6> se3_jl_inv(const Eigen::Matrix<double, 6, 1> &vec)
+    {
+        Eigen::Matrix<double, 6, 6> mat;
+
+        ensure(vec.tail<3>().norm() <= (M_PI + tol) , "Angle-axis representation requires |theta| <= pi");
+
+        Eigen::Matrix<double, 6, 6> coeff;
+        coeff.setZero();
+        coeff.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
+        coeff.block<3, 3>(3, 3) = so3_hat(vec.tail<3>());
+        coeff.block<3, 3>(0, 3) = so3_hat(vec.head<3>());
+
+        mat = Eigen::Matrix<double, 6, 6>::Identity() - 0.5*coeff;
+    
+        return mat;
+    }
+
+private:
+    static inline void ensure(bool cond, const char* msg)
+    {
+        if (!cond)
+        {
+            throw std::runtime_error(std::string("[Error]") + msg);
+        }
+    }
 
 };
 #endif
