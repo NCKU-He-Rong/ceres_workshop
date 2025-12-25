@@ -94,6 +94,13 @@ int main(int argc, char** argv)
     std::cout << T_mat_recover << std::endl;
 
 
+    std::cout << q_1.toRotationMatrix() << std::endl;
+    std::cout << Eigen::AngleAxisd(q_1).angle() << std::endl;
+    q_1.coeffs() *= -1;
+    std::cout << Eigen::AngleAxisd(q_1).angle() << std::endl;
+
+
+
 
     return 0;
 }

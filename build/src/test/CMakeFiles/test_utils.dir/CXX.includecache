@@ -6,13 +6,15 @@
 
 #IncludeRegexTransform: 
 
+../src/common/debug.hpp
+stdexcept
+-
+
 ../src/common/rotation.hpp
 Eigen/Dense
 -
-iostream
--
-stdexcept
--
+debug.hpp
+../src/common/debug.hpp
 
 /home/lio/Desktop/ceres_workshop/src/test/main.cpp
 iostream

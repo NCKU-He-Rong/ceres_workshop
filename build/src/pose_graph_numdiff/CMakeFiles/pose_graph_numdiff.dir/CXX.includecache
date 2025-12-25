@@ -6,13 +6,15 @@
 
 #IncludeRegexTransform: 
 
+../src/common/debug.hpp
+stdexcept
+-
+
 ../src/common/rotation.hpp
 Eigen/Dense
 -
-iostream
--
-stdexcept
--
+debug.hpp
+../src/common/debug.hpp
 
 /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/costfunctor.hpp
 ceres/ceres.h
@@ -28,7 +30,7 @@ pose_manifold.hpp
 Eigen/Dense
 -
 rotation.hpp
--
+/home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/rotation.hpp
 
 /home/lio/Desktop/ceres_workshop/src/pose_graph_numdiff/include/pose_manifold.hpp
 ceres/ceres.h

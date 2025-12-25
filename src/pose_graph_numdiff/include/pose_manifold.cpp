@@ -1,6 +1,6 @@
 #include "pose_manifold.hpp"
 #include <Eigen/Dense>
-#include <rotation.hpp>
+#include "rotation.hpp"
 
 /*
     侷限性: 右擾動、位置再姿態、w, qx, qy, qz存放四元數
@@ -9,12 +9,12 @@
 // 我們表示SE3是透過位置(3) + 四元數姿態(4), 注意順序先位置再姿態,同時四元數姿態是以qw, qx, qy, qz存放(我自己習慣的)
 int PoseManifold::AmbientSize() const
 {
-    return 7;
+	return 7;
 }
 
 int PoseManifold::TangentSize() const
 {
-    return 6;
+	return 6;
 }
 
 
