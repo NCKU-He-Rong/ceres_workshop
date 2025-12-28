@@ -1,6 +1,8 @@
 #ifndef ROTATION_HPP_
 #define ROTATION_HPP_
 
+
+// TODO: final check
 /*
  * Copyright (C) 2025 IEC Lab, DAA, NCKU
  *
@@ -32,7 +34,7 @@ class Rotation {
   // - 以下等效閉式公式(如 cos(theta/2), sin(theta/2)*axis)同時幫我處理 theta 接近 0 時，
   //   axis 的正規化數值不穩
   // - 同時加入「方向性約束」: 因為q 與 -q 表示同一旋轉，這裡統一強制 q.w() >= 0
-  static Eigen::Quaterniond rotvec2quaternion(const Eigen::Vector3d& rotvec) {
+  static Eigen::Quaterniond RotvecToQuaternion(const Eigen::Vector3d& rotvec) {
     const double angle = rotvec.norm();
     const Eigen::Vector3d axis = rotvec.normalized();
 
@@ -53,7 +55,7 @@ class Rotation {
   //   因為 acos 在 1 跟 -1 附近非常敏感 (對應到0度跟180度)，theta 接近 0 時數值精度容易變差
   // - 常見較穩健的作法是使用 atan2 形式 (例如 2*atan2(||q_vec||, q_w))
   // - 這裡直接使用 Eigen::AngleAxisd(q)，Eigen 會採取上面那個較穩健的策略並把角度規範到 [0, pi]
-  static Eigen::Vector3d quaternion2rotvec(const Eigen::Quaterniond& quaternion) {
+  static Eigen::Vector3d QuaternionToRotvec(const Eigen::Quaterniond& quaternion) {
     const Eigen::Quaterniond q(quaternion);
 
     // 若以 quaternion 建構 AngleAxisd，Eigen 會協助規範 angle/axis（[0, pi]）。
@@ -64,8 +66,8 @@ class Rotation {
   // so(3) hat: phi -> phi^ (skew-symmetric)
   // 說明：
   // - 這邊我們這邊不規範vec的norm()值一定要在pi之內，是因為不是只有李代數才會用到so3_hat，
-  //   其他任意向量也會用到，例如se3_jr() 
-  static Eigen::Matrix3d so3_hat(const Eigen::Vector3d& vec) {
+  //   其他任意向量也會用到，例如SE3RightJacobian() 
+  static Eigen::Matrix3d SO3Hat(const Eigen::Vector3d& vec) {
     Eigen::Matrix3d mat;
     mat << 0.0, -vec.z(), vec.y(),
         vec.z(), 0.0, -vec.x(),
@@ -74,87 +76,31 @@ class Rotation {
   }
 
   // so(3) vee: phi^ (skew-symmetric) -> phi
-  static Eigen::Vector3d so3_vee(const Eigen::Matrix3d& mat) {
+  static Eigen::Vector3d SO3Vee(const Eigen::Matrix3d& mat) {
     return Eigen::Vector3d(mat(2, 1), mat(0, 2), mat(1, 0));
   }
 
   // so(3) exp: phi -> R
-  static Eigen::Matrix3d so3_exp(const Eigen::Vector3d& vec) {
-    Eigen::Matrix3d mat;
-
-    const double theta = vec.norm();
-		// 這邊加入 kPi + kTol 是因為有時候會有一些毛刺theta很接近pi，但會超出一點點(約1e-12)，
-		// 因此如果透過 theta <= (kPi) 檢查，將會出錯
-    ensure(theta <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
-
-    const Eigen::Vector3d axis = vec.normalized();
-
-    // 小角度時直接回傳 I，避免數值放大
-    if (theta < kTol) {
-      mat.setIdentity();
-      return mat;
-    }
-
-    // Rodrigues 公式
-    mat = (1.0 - std::cos(theta)) * axis * axis.transpose() +
-          std::sin(theta) * so3_hat(axis) +
-          std::cos(theta) * Eigen::Matrix3d::Identity();
-    return mat;
+  static Eigen::Matrix3d SO3Exp(const Eigen::Vector3d& vec) {
+    return RotvecToQuaternion(vec).toRotationMatrix();
   }
 
   // so(3) log: R -> phi
-  static Eigen::Vector3d so3_log(const Eigen::Matrix3d& mat) {
+  static Eigen::Vector3d SO3Log(const Eigen::Matrix3d& mat) {
     ensure(std::abs(mat.determinant() - 1.0) <= kTol,
-           "Input Matrix is not a rotation matrix (det != 1)");
+           "[SO3Log] Input Matrix is not a rotation matrix (det != 1)");
+    
+    Eigen::Quaterniond quat(mat);
+    quat.normalize();
+    return QuaternionToRotvec(quat);
+  }
 
-    // axis_raw = 2*sin(theta)*axis
-    const Eigen::Vector3d axis_raw(mat(2, 1) - mat(1, 2),
-                                   mat(0, 2) - mat(2, 0),
-                                   mat(1, 0) - mat(0, 1));
-
-    // 傳統用 acos 在 1 跟 -1 附近非常敏感 (對應到0度跟180度)，這裡改用 atan2 較穩定
-    const double cth = (mat.trace() - 1.0) / 2.0;
-    const double axis_raw_norm = axis_raw.norm();
-    // 雖然 std::atan2的範圍是[-pi, pi]，但是axis_raw_norm 一定大於0，
-    // 因此下面的theta範圍是[0, pi]
-    const double theta = std::atan2(0.5 * axis_raw_norm, cth);  
-
-    if (theta < kTol) {
-      return Eigen::Vector3d::Zero();
-    }
-
-    // 當 theta ≈ pi 時，R 會趨近對稱矩陣，此時
-		// axis_raw = 2*sin(theta)*axis ≈ 0（因 sin(pi)=0），無法直接從 axis_raw 取回旋轉軸。
-		// 因此改以 (R - I) 的零空間 (nullspace) 取得旋轉軸：
-		// - A = (R - I) 的 rank = 2 (必定)
-		// - 其零空間維度為 1，對應的向量即為旋轉軸 axis
-		// - 在 SVD 中可由 V 的最後一個 column 取得 (0奇異值對應的奇異向量)
-		if (std::abs(theta - kPi) < kTol) {
-				const Eigen::Matrix3d A = mat - Eigen::Matrix3d::Identity();
-			
-				// Eigen 的分解需要明確指定要計算哪些項目，此處只需要 V 以取得 nullspace。
-				// (若需要 U/V 完整資訊，可用：ComputeFullU | ComputeFullV)
-				const Eigen::JacobiSVD<Eigen::Matrix3d> svd(A, Eigen::ComputeFullV);
-			
-				Eigen::Vector3d axis = svd.matrixV().col(2);  // nullspace direction
-				axis.normalize();
-				return theta * axis;
-		}
-
-		Eigen::Vector3d axis = axis_raw;
-		axis.normalize();
-		return theta * axis;
-	}
 
   // so(3) 右 Jacobian: Jr(phi)
-  static Eigen::Matrix3d so3_jr(const Eigen::Vector3d& vec) {
+  static Eigen::Matrix3d SO3RightJacobian(const Eigen::Vector3d& vec) {
     Eigen::Matrix3d mat;
 
     const double theta = vec.norm();
-    ensure(theta <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
-
     const Eigen::Vector3d axis = vec.normalized();
 
     if (theta < kTol) {
@@ -167,18 +113,15 @@ class Rotation {
 
     mat = coeff_1 * Eigen::Matrix3d::Identity() +
           (1.0 - coeff_1) * axis * axis.transpose() -
-          coeff_2 * so3_hat(axis);
+          coeff_2 * SO3Hat(axis);
     return mat;
   }
 
   // so(3) 右 Jacobian inverse: Jr^{-1}(phi)
-  static Eigen::Matrix3d so3_jr_inv(const Eigen::Vector3d& vec) {
+  static Eigen::Matrix3d SO3RightJacobianInverse(const Eigen::Vector3d& vec) {
     Eigen::Matrix3d mat;
 
     const double theta = vec.norm();
-    ensure(theta <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
-
     const Eigen::Vector3d axis = vec.normalized();
 
     if (theta < kTol) {
@@ -193,17 +136,15 @@ class Rotation {
 
     mat = coeff * Eigen::Matrix3d::Identity() +
           (1.0 - coeff) * axis * axis.transpose() +
-          (theta / 2.0) * so3_hat(axis);
+          (theta / 2.0) * SO3Hat(axis);
     return mat;
   }
 
   // so(3) 左 Jacobian inverse: Jl(phi)
-  static Eigen::Matrix3d so3_jl(const Eigen::Vector3d& vec) {
+  static Eigen::Matrix3d SO3LeftJacobian(const Eigen::Vector3d& vec) {
     Eigen::Matrix3d mat;
 
     const double theta = vec.norm();
-    ensure(theta <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
 
     const Eigen::Vector3d axis = vec.normalized();
 
@@ -217,18 +158,15 @@ class Rotation {
 
     mat = coeff_1 * Eigen::Matrix3d::Identity() +
           (1.0 - coeff_1) * axis * axis.transpose() +
-          coeff_2 * so3_hat(axis);
+          coeff_2 * SO3Hat(axis);
     return mat;
   }
 
   // so(3) 左 Jacobian inverse: Jl^{-1}(phi)
-  static Eigen::Matrix3d so3_jl_inv(const Eigen::Vector3d& vec) {
+  static Eigen::Matrix3d SO3LeftJacobianInverse(const Eigen::Vector3d& vec) {
     Eigen::Matrix3d mat;
 
     const double theta = vec.norm();
-    ensure(theta <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
-
     const Eigen::Vector3d axis = vec.normalized();
 
     if (std::abs(theta) < kTol) {
@@ -242,110 +180,151 @@ class Rotation {
 
     mat = coeff * Eigen::Matrix3d::Identity() +
           (1.0 - coeff) * axis * axis.transpose() -
-          (theta / 2.0) * so3_hat(axis);
+          (theta / 2.0) * SO3Hat(axis);
     return mat;
   }
 
   // se(3) hat：se -> 4x4 矩陣
-  static Eigen::Matrix4d se3_hat(const Eigen::Matrix<double, 6, 1>& vec) {
+  static Eigen::Matrix4d SE3Hat(const Eigen::Matrix<double, 6, 1>& vec) {
     Eigen::Matrix4d mat = Eigen::Matrix4d::Zero();
-    mat.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
+    mat.block<3, 3>(0, 0) = SO3Hat(vec.tail<3>());
     mat.block<3, 1>(0, 3) = vec.head<3>();
     return mat;
   }
 
   // se(3) vee：4x4 矩陣 -> se
-  static Eigen::Matrix<double, 6, 1> se3_vee(const Eigen::Matrix4d& mat) {
+  static Eigen::Matrix<double, 6, 1> SE3Vee(const Eigen::Matrix4d& mat) {
     Eigen::Matrix<double, 6, 1> vec = Eigen::Matrix<double, 6, 1>::Zero();
     vec.head<3>() = mat.block<3, 1>(0, 3);
-    vec.tail<3>() = so3_vee(mat.block<3, 3>(0, 0));
+    vec.tail<3>() = SO3Vee(mat.block<3, 3>(0, 0));
     return vec;
   }
 
   // se(3) exp: se -> T
-  static Eigen::Matrix4d se3_exp(const Eigen::Matrix<double, 6, 1>& vec) {
+  static Eigen::Matrix4d SE3Exp(const Eigen::Matrix<double, 6, 1>& vec) {
     Eigen::Matrix4d mat = Eigen::Matrix4d::Zero();
     mat(3, 3) = 1.0;
 
-    mat.block<3, 3>(0, 0) = so3_exp(vec.tail<3>());
-    mat.block<3, 1>(0, 3) = so3_jl(vec.tail<3>()) * vec.head<3>();
+    mat.block<3, 3>(0, 0) = SO3Exp(vec.tail<3>());
+    mat.block<3, 1>(0, 3) = SO3LeftJacobian(vec.tail<3>()) * vec.head<3>();
     return mat;
   }
 
   // se(3) log: T -> se
-  static Eigen::Matrix<double, 6, 1> se3_log(const Eigen::Matrix4d& mat) {
+  static Eigen::Matrix<double, 6, 1> SE3Log(const Eigen::Matrix4d& mat) {
     ensure(std::abs(mat(3, 3) - 1.0) < kTol,
-           "Input Matrix is not a transformation matrix");
+           "[SE3Log] Input Matrix is not a transformation matrix");
 
     Eigen::Matrix<double, 6, 1> vec = Eigen::Matrix<double, 6, 1>::Zero();
-    vec.tail<3>() = so3_log(mat.block<3, 3>(0, 0));
-    vec.head<3>() = so3_jl_inv(vec.tail<3>()) * mat.block<3, 1>(0, 3);
+    vec.tail<3>() = SO3Log(mat.block<3, 3>(0, 0));
+    vec.head<3>() = SO3LeftJacobianInverse(vec.tail<3>()) * mat.block<3, 1>(0, 3);
     return vec;
   }
 
   // se(3) 右 Jacobian (此處為近似)
-  static Eigen::Matrix<double, 6, 6> se3_jr(const Eigen::Matrix<double, 6, 1>& vec) {
+  static Eigen::Matrix<double, 6, 6> SE3RightJacobian(const Eigen::Matrix<double, 6, 1>& vec) {
     Eigen::Matrix<double, 6, 6> mat;
-
-    ensure(vec.tail<3>().norm() <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
-
     Eigen::Matrix<double, 6, 6> coeff = Eigen::Matrix<double, 6, 6>::Zero();
-    coeff.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
-    coeff.block<3, 3>(3, 3) = so3_hat(vec.tail<3>());
-    coeff.block<3, 3>(0, 3) = so3_hat(vec.head<3>());
+    coeff.block<3, 3>(0, 0) = SO3Hat(vec.tail<3>());
+    coeff.block<3, 3>(3, 3) = SO3Hat(vec.tail<3>());
+    coeff.block<3, 3>(0, 3) = SO3Hat(vec.head<3>());
 
     mat = Eigen::Matrix<double, 6, 6>::Identity() - 0.5 * coeff;
     return mat;
   }
 
   // se(3) 右 Jacobian inverse (此處為近似)
-  static Eigen::Matrix<double, 6, 6> se3_jr_inv(const Eigen::Matrix<double, 6, 1>& vec) {
+  static Eigen::Matrix<double, 6, 6> SE3RightJacobianInverse(const Eigen::Matrix<double, 6, 1>& vec) {
     Eigen::Matrix<double, 6, 6> mat;
-
-    ensure(vec.tail<3>().norm() <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
-
     Eigen::Matrix<double, 6, 6> coeff = Eigen::Matrix<double, 6, 6>::Zero();
-    coeff.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
-    coeff.block<3, 3>(3, 3) = so3_hat(vec.tail<3>());
-    coeff.block<3, 3>(0, 3) = so3_hat(vec.head<3>());
+    coeff.block<3, 3>(0, 0) = SO3Hat(vec.tail<3>());
+    coeff.block<3, 3>(3, 3) = SO3Hat(vec.tail<3>());
+    coeff.block<3, 3>(0, 3) = SO3Hat(vec.head<3>());
 
     mat = Eigen::Matrix<double, 6, 6>::Identity() + 0.5 * coeff;
     return mat;
   }
 
   // se(3) 左 Jacobian (此處為近似)
-  static Eigen::Matrix<double, 6, 6> se3_jl(const Eigen::Matrix<double, 6, 1>& vec) {
+  static Eigen::Matrix<double, 6, 6> SE3LeftJacobian(const Eigen::Matrix<double, 6, 1>& vec) {
     Eigen::Matrix<double, 6, 6> mat;
-
-    ensure(vec.tail<3>().norm() <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
-
     Eigen::Matrix<double, 6, 6> coeff = Eigen::Matrix<double, 6, 6>::Zero();
-    coeff.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
-    coeff.block<3, 3>(3, 3) = so3_hat(vec.tail<3>());
-    coeff.block<3, 3>(0, 3) = so3_hat(vec.head<3>());
+    coeff.block<3, 3>(0, 0) = SO3Hat(vec.tail<3>());
+    coeff.block<3, 3>(3, 3) = SO3Hat(vec.tail<3>());
+    coeff.block<3, 3>(0, 3) = SO3Hat(vec.head<3>());
 
     mat = Eigen::Matrix<double, 6, 6>::Identity() + 0.5 * coeff;
     return mat;
   }
 
   // se(3) 左 Jacobian inverse (此處為近似)
-  static Eigen::Matrix<double, 6, 6> se3_jl_inv(const Eigen::Matrix<double, 6, 1>& vec) {
+  static Eigen::Matrix<double, 6, 6> SE3LeftJacobianInverse(const Eigen::Matrix<double, 6, 1>& vec) {
     Eigen::Matrix<double, 6, 6> mat;
-
-    ensure(vec.tail<3>().norm() <= (kPi + kTol),
-           "Angle-axis representation requires |theta| <= pi");
-
     Eigen::Matrix<double, 6, 6> coeff = Eigen::Matrix<double, 6, 6>::Zero();
-    coeff.block<3, 3>(0, 0) = so3_hat(vec.tail<3>());
-    coeff.block<3, 3>(3, 3) = so3_hat(vec.tail<3>());
-    coeff.block<3, 3>(0, 3) = so3_hat(vec.head<3>());
+    coeff.block<3, 3>(0, 0) = SO3Hat(vec.tail<3>());
+    coeff.block<3, 3>(3, 3) = SO3Hat(vec.tail<3>());
+    coeff.block<3, 3>(0, 3) = SO3Hat(vec.head<3>());
 
     mat = Eigen::Matrix<double, 6, 6>::Identity() - 0.5 * coeff;
     return mat;
   }
+
+  // se(3) se3 的 Adjoint 矩陣
+  static Eigen::Matrix<double, 6, 6> SE3Adjoint(const Eigen::Matrix4d &mat) {
+    Eigen::Matrix3d rot_mat = mat.block<3, 3>(0, 0);
+    Eigen::Vector3d t = mat.block<3, 1>(0, 3);
+
+    ensure(std::abs(mat(3, 3) - 1.0) < kTol,
+           "[SE3Adjoint] Input Matrix is not a transformation matrix (T(3, 3) != 1)");
+    ensure(std::abs(rot_mat.determinant() - 1.0) <= kTol,
+           "[SE3Adjoint] Input Matrix is not a transformation matrix (det(R) != 1)");
+
+    Eigen::Matrix<double, 6, 6> adj_mat = Eigen::Matrix<double, 6, 6>::Zero();
+    adj_mat.block<3, 3>(0, 0) = rot_mat;
+    adj_mat.block<3, 3>(3, 3) = rot_mat;
+    adj_mat.block<3, 3>(0, 3) = SO3Hat(t) * rot_mat;
+    return adj_mat;
+  }
+
+  // 
+  static double RadToDeg(const double &angle) {
+    return angle / kPi * 180.0;
+  }
+
+  static double DegToRad(const double &angle) {
+    return angle / 180.0 * kPi;
+  }
+
+  //
+  static Eigen::Matrix3d RotXDeg(const double &angle) {
+    Eigen::Matrix3d mat;
+    double value = DegToRad(angle);
+    mat << 1, 0, 0, 
+        0, std::cos(value), -std::sin(value),
+        0, std::sin(value), std::cos(value);
+    return mat;
+  }
+
+  //
+  static Eigen::Matrix3d RotYDeg(const double &angle) {
+    Eigen::Matrix3d mat;
+    double value = DegToRad(angle);
+    mat << std::cos(value), 0, std::sin(value), 
+        0, 1, 0, 
+        -std::sin(value), 0, std::cos(value);
+    return mat;
+  }
+
+  //
+  static Eigen::Matrix3d RotZDeg(const double &angle) {
+    Eigen::Matrix3d mat;
+    double value = DegToRad(angle);
+    mat << std::cos(value), -std::sin(value), 0,
+           std::sin(value), std::cos(value), 0,
+           0, 0, 1;
+    return mat;
+  }
+  
 
  private:
   static constexpr double kTol = 1e-12;

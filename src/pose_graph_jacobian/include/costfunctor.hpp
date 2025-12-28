@@ -44,7 +44,7 @@ public:
 
         r_t_w = sqrt_info_mat.block<3, 3>(0, 0) * (q_mes * q_xj.inverse() * t_xi - q_mes * q_xj.inverse() * t_xj + t_mes);
 
-        Eigen::Vector3d r_q = Rotation::quaternion2rotvec((q_mes * q_xj.inverse() * q_xi).normalized());
+        Eigen::Vector3d r_q = Rotation::QuaternionToRotvec((q_mes * q_xj.inverse() * q_xi).normalized());
         r_q_w = sqrt_info_mat.block<3, 3>(3, 3) * r_q;
 
         
@@ -55,7 +55,7 @@ public:
                 Eigen::Map<Eigen::Matrix<double, 6, 7, Eigen::RowMajor>> j_xi(jacobians[0]);
                 j_xi.setZero();
                 j_xi.block<3, 3>(0, 0) = (q_mes * q_xj.inverse()).toRotationMatrix();
-                j_xi.block<3, 3>(3, 3) = Rotation::so3_jr_inv(r_q);
+                j_xi.block<3, 3>(3, 3) = Rotation::SO3RightJacobianInverse(r_q);
                 j_xi = sqrt_info_mat * j_xi;
             }
 
@@ -64,7 +64,7 @@ public:
                 Eigen::Map<Eigen::Matrix<double, 6, 7, Eigen::RowMajor>> j_xj(jacobians[1]);
                 j_xj.setZero();
                 j_xj.block<3, 3>(0, 0) = -(q_mes * q_xj.inverse()).toRotationMatrix();
-                j_xj.block<3, 3>(3, 3) = -Rotation::so3_jl_inv(r_q) * q_mes.toRotationMatrix();
+                j_xj.block<3, 3>(3, 3) = -Rotation::SO3LeftJacobianInverse(r_q) * q_mes.toRotationMatrix();
                 j_xj = sqrt_info_mat * j_xj;
             }
 

@@ -6,3 +6,19 @@
 
 #IncludeRegexTransform: 
 
+/home/lio/Desktop/ceres_workshop/src/fileio/txtio.cpp
+txtio.hpp
+/home/lio/Desktop/ceres_workshop/src/fileio/txtio.hpp
+vector
+-
+
+/home/lio/Desktop/ceres_workshop/src/fileio/txtio.hpp
+iostream
+-
+fstream
+-
+sstream
+-
+vector
+-
+

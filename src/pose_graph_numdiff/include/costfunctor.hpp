@@ -73,7 +73,7 @@ struct CostFunctor
         r_t = sqrt_mat.block<3, 3>(0, 0) * (q_mes * q_xj.inverse() * t_xi - q_mes * q_xj.inverse() * t_xj + t_mes);
 
         // 姿態誤差
-        r_q = sqrt_mat.block<3, 3>(3, 3) * (Rotation::quaternion2rotvec((q_mes * q_xj.inverse() * q_xi).normalized()));
+        r_q = sqrt_mat.block<3, 3>(3, 3) * (Rotation::QuaternionToRotvec((q_mes * q_xj.inverse() * q_xi).normalized()));
 
         return true;
     }

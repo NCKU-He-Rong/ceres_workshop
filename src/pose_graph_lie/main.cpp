@@ -9,6 +9,7 @@
 #include "include/pose_manifold.hpp"
 #include "include/costfunctor.hpp"
 
+#include "rotation.hpp"
 
 // main fucntion
 int main(int argc, char*argv[])
@@ -43,7 +44,7 @@ int main(int argc, char*argv[])
     fin.seekg(0, std::ios::beg);  // 將檔案指標移回檔案開頭
 
     // create the state array
-    double state[vertexLen][7];
+    double state[vertexLen][6];
 
     // create the problem
     ceres::Problem problem;
@@ -73,17 +74,21 @@ int main(int argc, char*argv[])
             fin >> q.w();
             q.normalize();
 
+            Eigen::Matrix4d state_transform;
+            state_transform.setZero();
+            state_transform(3, 3) = 1.0;
+			state_transform.block<3, 3>(0, 0) = q.toRotationMatrix();
+			state_transform.block<3, 1>(0, 3) = t;
+
+			Eigen::Matrix<double, 6, 1> state_lie = Rotation::SE3Log(state_transform);
+
             ceres::Manifold * manifold = new PoseManifold();
 
-            state[index][0] = t(0);
-            state[index][1] = t(1);
-            state[index][2] = t(2);
-            state[index][3] = q.w();
-            state[index][4] = q.x();
-            state[index][5] = q.y();
-            state[index][6] = q.z();
+            for (int i = 0;i<6;i++) {
+				state[index][i] = state_lie(i);
+			}
 
-            problem.AddParameterBlock(state[index], 7, manifold);
+            problem.AddParameterBlock(state[index], 6, manifold);
 
             if (index == 0)
             {   
@@ -118,8 +123,7 @@ int main(int argc, char*argv[])
                 fin >> info_vec(i);
             }
 
-            ceres::CostFunction* cost_function = new ceres::NumericDiffCostFunction<CostFunctor, ceres::CENTRAL, 6, 7, 7>
-                                                (new CostFunctor(t, q, info_vec));
+            ceres::CostFunction* cost_function = new CostFunctor(t, q, info_vec);
             
             problem.AddResidualBlock(cost_function, nullptr, state[index_i], state[index_j]);
         }
@@ -133,7 +137,7 @@ int main(int argc, char*argv[])
     options.linear_solver_type = ceres::SPARSE_SCHUR;
     options.trust_region_strategy_type = ceres::LEVENBERG_MARQUARDT;  
     options.minimizer_progress_to_stdout = true;
-    options.num_threads = 4;
+    options.num_threads = 1;
 
     // optimize the problem
     ceres::Solver::Summary summary;
@@ -150,9 +154,10 @@ int main(int argc, char*argv[])
     std::ofstream fout("result.txt");
     for (int i=0;i<vertexLen;i++)
     {
-        fout << state[i][0] << " " 
-             << state[i][1] << " " 
-             << state[i][2] << std::endl;
+        Eigen::Matrix4d pose = Rotation::SE3Exp(Eigen::Matrix<double, 6, 1>(state[i]));
+        fout << pose(0, 3) << " " 
+             << pose(1, 3)<< " " 
+             << pose(2, 3) << std::endl;
     }
 
     //return 

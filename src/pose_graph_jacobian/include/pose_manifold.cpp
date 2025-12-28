@@ -35,7 +35,7 @@ bool PoseManifold::Plus(const double* x, const double* delta, double* x_plus_del
     const Eigen::Quaterniond q(x[3], x[4], x[5], x[6]);
     
     const Eigen::Vector3d delta_t(delta[0], delta[1], delta[2]);
-    const Eigen::Quaterniond delta_q = Rotation::rotvec2quaternion(Eigen::Vector3d(delta[3], delta[4], delta[5]));
+    const Eigen::Quaterniond delta_q = Rotation::RotvecToQuaternion(Eigen::Vector3d(delta[3], delta[4], delta[5]));
 
     // 位置更新 
     Eigen::Map<Eigen::Vector3d> t_plus(x_plus_delta);
@@ -80,7 +80,7 @@ bool PoseManifold::Minus(const double* y, const double* x, double* y_minus_x) co
     Eigen::Map<Eigen::Vector3d> q_y_minus_x(y_minus_x+3);
 
     t_y_minus_x = t_y - t_x;
-    q_y_minus_x = Rotation::quaternion2rotvec((q_x.inverse() * q_y).normalized());
+    q_y_minus_x = Rotation::QuaternionToRotvec((q_x.inverse() * q_y).normalized());
 
     return true;
 }
