@@ -34,7 +34,11 @@ lib/                 # 編譯生成的庫文件
 1. **配置環境**
    確保已安裝 Ceres Solver 和 Eigen。
 
-2. **編譯專案**
+2. **Clone 專案**
+   git clone --recurse-submodules https://github.com/NCKU-He-Rong/ceres_workshop.git
+   git submodule update --remote --merge
+
+3. **編譯專案**
    ```bash
    mkdir build
    cd build
@@ -42,7 +46,7 @@ lib/                 # 編譯生成的庫文件
    make
    ```
 
-3. **運行示例**
+4. **運行示例**
    編譯完成後，可執行文件將生成於 `bin/` 目錄下。例如：
    ```bash
    ./bin/curve_fitting_autodiff
