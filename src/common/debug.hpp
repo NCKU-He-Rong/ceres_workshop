@@ -22,7 +22,6 @@
  */
 
 #include <stdexcept>
-#include <string>
 
 // 不要用assert,因為assert在release mode中無法工作
 // 要用inline不然會有重複引入的問題
